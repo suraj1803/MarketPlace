@@ -1,8 +1,9 @@
-import { Text } from "@chakra-ui/react";
-import React from "react";
+import { HStack } from "@chakra-ui/react";
+import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 const App = () => {
-  return <Text>Hello World</Text>;
+  return <Signup></Signup>;
 };
 
 export default App;
