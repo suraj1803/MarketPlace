@@ -9,7 +9,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
-import Navbar from "./NavBar";
+import Navbar from "../components/NavBar";
 
 const Signup = () => {
   return (
@@ -44,7 +44,12 @@ const Signup = () => {
           </Button>
           <Text fontSize={"14px"} mt="5">
             Already have an account ?{" "}
-            <Link paddingX={"3px"} variant="underline" colorPalette="teal">
+            <Link
+              paddingX={"3px"}
+              variant="underline"
+              href="/"
+              colorPalette="teal"
+            >
               Login Now
             </Link>
           </Text>

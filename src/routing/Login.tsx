@@ -9,9 +9,17 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { PasswordInput } from "@/components/ui/password-input";
-import Navbar from "./NavBar";
+import Navbar from "../components/NavBar";
+import { useNavigate } from "react-router";
 
 const Login = () => {
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    // Perform login logic here
+    // On success:
+    navigate("/signup");
+  };
   return (
     <>
       <Navbar></Navbar>
@@ -30,12 +38,18 @@ const Login = () => {
             </Field.Label>
             <PasswordInput id="password" size="lg" />
           </Field.Root>
-          <Button fontSize={"md"} mt={7} paddingX={7} width={"100%"}>
+          <Button
+            fontSize={"md"}
+            mt={7}
+            paddingX={7}
+            width={"100%"}
+            onClick={handleLogin}
+          >
             Login
           </Button>
           <Text fontSize={"14px"} mt="5">
             Not a member?{" "}
-            <Link variant="underline" colorPalette="teal">
+            <Link variant="underline" href="/signup" colorPalette="teal">
               Sign up now
             </Link>
           </Text>

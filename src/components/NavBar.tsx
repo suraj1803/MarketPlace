@@ -3,7 +3,7 @@ import DarkMode from "./DarkMode";
 
 const Navbar = () => {
   return (
-    <HStack justifyContent="end" padding={"10px"}>
+    <HStack justifyContent="end" padding={"5px"}>
       <DarkMode></DarkMode>
     </HStack>
   );
