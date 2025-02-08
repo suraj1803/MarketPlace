@@ -11,14 +11,16 @@ import {
 import { PasswordInput } from "@/components/ui/password-input";
 import Navbar from "../components/NavBar";
 import { useNavigate } from "react-router";
+import { FieldValues, useForm } from "react-hook-form";
 
 const Login = () => {
   const navigate = useNavigate();
-
-  const handleLogin = () => {
+  const { register, handleSubmit } = useForm();
+  const handleLogin = (data: FieldValues) => {
     // Perform login logic here
     // On success:
-    navigate("/signup");
+
+    console.log(data);
   };
   return (
     <>
@@ -32,21 +34,28 @@ const Login = () => {
             <Field.Label fontSize="lg" mb="2">
               Email
             </Field.Label>
-            <Input id="email" placeholder="me@example.com" size="lg" mb="4" />
+            <Input
+              {...register("email")}
+              id="email"
+              placeholder="me@example.com"
+              size="lg"
+              mb="4"
+            />
             <Field.Label fontSize="lg" mb="2">
               Password
             </Field.Label>
-            <PasswordInput id="password" size="lg" />
+            <PasswordInput {...register("password")} id="password" size="lg" />
+            <Button
+              type="submit"
+              fontSize={"md"}
+              mt={7}
+              paddingX={7}
+              width={"100%"}
+              onClick={handleSubmit(handleLogin)}
+            >
+              Login
+            </Button>
           </Field.Root>
-          <Button
-            fontSize={"md"}
-            mt={7}
-            paddingX={7}
-            width={"100%"}
-            onClick={handleLogin}
-          >
-            Login
-          </Button>
           <Text fontSize={"14px"} mt="5">
             Not a member?{" "}
             <Link variant="underline" href="/signup" colorPalette="teal">
