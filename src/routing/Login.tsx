@@ -8,7 +8,6 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-import { Link as ChakraLink } from "@chakra-ui/react";
 import { Link } from "react-router";
 
 import { PasswordInput } from "@/components/ui/password-input";
@@ -55,45 +54,45 @@ const Login = () => {
             Welcome
           </Heading>
 
-          <Field.Root>
-            <Form onSubmit={handleSubmit(handleLogin)}>
-              <Field.Label fontSize="lg" mb="2">
-                Email
-              </Field.Label>
-              <Input
-                {...register("email")}
-                id="email"
-                placeholder="me@example.com"
-                size="lg"
-              />
-              {errors.email && (
-                <Text color={"red"} fontSize="sm">
-                  {errors.email.message}
-                </Text>
-              )}
-              <Field.Label fontSize="lg" mb="2">
-                Password
-              </Field.Label>
-              <PasswordInput
-                {...register("password")}
-                id="password"
-                size="lg"
-              />
-              {errors.password && (
-                <Text color={"red"} fontSize="sm">
-                  {errors.password.message}
-                </Text>
-              )}
-              <Button
-                type="submit"
-                fontSize={"md"}
-                mt={7}
-                paddingX={7}
-                width={"100%"}
-              >
-                Login
-              </Button>
-            </Form>
+          <Field.Root as={Form} onSubmit={handleSubmit(handleLogin)}>
+            <Field.Label fontSize="lg" mb="2">
+              Email
+            </Field.Label>
+            <Input
+              {...register("email")}
+              id="email"
+              placeholder="me@example.com"
+              size="lg"
+              mb="4"
+            />
+            {errors.email && (
+              <Text color={"red"} fontSize="sm" mb="4">
+                {errors.email.message}
+              </Text>
+            )}
+            <Field.Label fontSize="lg" mb="2">
+              Password
+            </Field.Label>
+            <PasswordInput
+              {...register("password")}
+              id="password"
+              size="lg"
+              mb="4"
+            />
+            {errors.password && (
+              <Text color={"red"} fontSize="sm" mb="4">
+                {errors.password.message}
+              </Text>
+            )}
+            <Button
+              type="submit"
+              fontSize={"md"}
+              mt={7}
+              paddingX={7}
+              width={"100%"}
+            >
+              Login
+            </Button>
           </Field.Root>
           <Text fontSize={"14px"} mt="5">
             Not a member?{" "}

@@ -53,60 +53,61 @@ const Signup = () => {
             Signup
           </Heading>
 
-          <Field.Root>
-            <Form onSubmit={handleSubmit(handleSignUp)}>
-              <Field.Label fontSize="lg" mb="2">
-                Name
-              </Field.Label>
-              <Input
-                {...register("name")}
-                id="name"
-                placeholder="John Doe"
-                size="lg"
-              />
-              {errors.name && (
-                <Text color={"red"} fontSize="sm">
-                  {errors.name.message}
-                </Text>
-              )}
-              <Field.Label fontSize="lg" mb="2">
-                Email
-              </Field.Label>
-              <Input
-                {...register("email")}
-                id="email"
-                placeholder="johndoe@gmail.com"
-                size="lg"
-              />
-              {errors.email && (
-                <Text color={"red"} fontSize="sm">
-                  {errors.email.message}
-                </Text>
-              )}
-              <Field.Label fontSize="lg" mb="2">
-                Password
-              </Field.Label>
-              <PasswordInput
-                {...register("password")}
-                id="password"
-                size="lg"
-              />
-              {errors.password && (
-                <Text color={"red"} fontSize="sm">
-                  {errors.password.message}
-                </Text>
-              )}
+          <Field.Root as={Form} onSubmit={handleSubmit(handleSignUp)}>
+            <Field.Label fontSize="lg" mb="2">
+              Name
+            </Field.Label>
+            <Input
+              {...register("name")}
+              id="name"
+              placeholder="John Doe"
+              size="lg"
+              mb="4"
+            />
+            {errors.name && (
+              <Text color={"red"} fontSize="sm" mb="4">
+                {errors.name.message}
+              </Text>
+            )}
+            <Field.Label fontSize="lg" mb="2">
+              Email
+            </Field.Label>
+            <Input
+              {...register("email")}
+              id="email"
+              placeholder="johndoe@gmail.com"
+              size="lg"
+              mb="4"
+            />
+            {errors.email && (
+              <Text color={"red"} fontSize="sm" mb="4">
+                {errors.email.message}
+              </Text>
+            )}
+            <Field.Label fontSize="lg" mb="2">
+              Password
+            </Field.Label>
+            <PasswordInput
+              {...register("password")}
+              id="password"
+              size="lg"
+              mb="4"
+            />
+            {errors.password && (
+              <Text color={"red"} fontSize="sm">
+                {errors.password.message}
+              </Text>
+            )}
 
-              <Button
-                type="submit"
-                fontSize={"md"}
-                mt={7}
-                paddingX={7}
-                width={"100%"}
-              >
-                SIGN UP
-              </Button>
-            </Form>
+            <Button
+              type="submit"
+              fontSize={"md"}
+              mt={7}
+              paddingX={7}
+              width={"100%"}
+            >
+              SIGN UP
+            </Button>
           </Field.Root>
           <Text fontSize={"14px"} mt="5">
             Already have an account ?
