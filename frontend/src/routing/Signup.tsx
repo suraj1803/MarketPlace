@@ -39,7 +39,7 @@ const Signup = () => {
 
   const handleSignUp = async (data: FieldValues) => {
     try {
-      const response = await axios.post("http://localhost:5173/signup", data, {
+      const response = await axios.post("/api/signup", data, {
         headers: { "Content-Type": "application/json" },
       });
 
@@ -49,6 +49,7 @@ const Signup = () => {
           type: "error",
           duration: 2000,
         });
+        reset();
         return;
       }
 

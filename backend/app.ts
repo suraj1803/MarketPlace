@@ -3,24 +3,17 @@ import express, { Response, Request } from "express";
 import User from "./db/userModel";
 import bcrypt from "bcrypt";
 import dbConnect from "./db/dbConnect";
-import cors from "cors";
 
 configDotenv();
 const app = express();
 
-app.use(express.json()); // Add this line
-app.use(
-  cors({
-    origin: "http://localhost:5174",
-    credentials: true, // If you need to send cookies or authentication headers
-  }),
-);
+app.use(express.json());
 
 //app.get("/", (req: Request, res: Response) => {
 //  res.send("Hello World");
 //});
 
-app.post("/signup", async (req: Request, res: Response): Promise<any> => {
+app.post("/api/signup", async (req: Request, res: Response): Promise<any> => {
   try {
     const { name, email, password } = req.body;
 
@@ -43,8 +36,8 @@ app.post("/signup", async (req: Request, res: Response): Promise<any> => {
 
 dbConnect()
   .then(() => {
-    app.listen(5173, () => {
-      console.log("Server is running on port 5173");
+    app.listen(process.env.PORT, () => {
+      console.log(`Server is running on port ${process.env.PORT}`);
     });
   })
   .catch((error) => {
