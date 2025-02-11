@@ -7,17 +7,19 @@ import {
   Heading,
   Button,
 } from "@chakra-ui/react";
+import { Toaster, toaster } from "@/components/ui/toaster";
 import { PasswordInput } from "@/components/ui/password-input";
 import Navbar from "../components/NavBar";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, Link } from "react-router";
+import { Form, Link, useNavigate } from "react-router";
+import axios from "axios";
 
 const schema = z.object({
   name: z
     .string()
-    .min(3, { message: "Name should be atleast of 3 characters." }),
+    .min(3, { message: "Name should be at least of 3 characters." }),
   email: z.string().email("Enter a valid email."),
   password: z
     .string()
@@ -27,16 +29,40 @@ const schema = z.object({
 type SignUpFormData = z.infer<typeof schema>;
 
 const Signup = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<SignUpFormData>({ resolver: zodResolver(schema) });
-  const handleSignUp = (data: FieldValues) => {
-    // Perform login logic here
-    // On success:
 
-    console.log(data);
+  const handleSignUp = async (data: FieldValues) => {
+    try {
+      const response = await axios.post("http://localhost:5173/signup", data, {
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.data.success) {
+        toaster.create({
+          description: response.data.message,
+          type: "error",
+          duration: 2000,
+        });
+        return;
+      }
+
+      console.log("User created successfully:", response.data);
+      navigate("/");
+    } catch (error: any) {
+      reset();
+
+      toaster.create({
+        description: "Network error or server unreachable",
+        type: "error",
+        duration: 2000,
+      });
+    }
   };
 
   return (
@@ -115,6 +141,7 @@ const Signup = () => {
               <Link to="/">Login now</Link>
             </Text>
           </Text>
+          <Toaster />
         </VStack>
       </Flex>
     </>

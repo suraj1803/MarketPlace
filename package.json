@@ -16,6 +16,8 @@
     "@hookform/resolvers": "^3.10.0",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.0",
+    "axios": "^1.7.9",
+    "bcrypt": "^5.1.1",
     "express": "^4.21.2",
     "hookform-resolvers": "^3.3.3",
     "mongodb": "^6.13.0",
