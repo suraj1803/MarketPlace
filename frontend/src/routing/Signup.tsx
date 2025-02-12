@@ -47,8 +47,8 @@ const Signup = () => {
       if (!response.data.success) {
         setError("email", {
           type: "manual",
-          message: response.data.message
-        })
+          message: response.data.message,
+        });
         return;
       }
 
@@ -138,7 +138,7 @@ const Signup = () => {
           <Text fontSize={"14px"} mt="5">
             Already have an account ?
             <Text as={"u"} color={"teal"} ml={"7px"}>
-              <Link to="/">Login now</Link>
+              <Link to="/login">Login now</Link>
             </Text>
           </Text>
           <Toaster />
