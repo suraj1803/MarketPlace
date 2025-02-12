@@ -19,7 +19,7 @@ app.post("/api/signup", async (req: Request, res: Response): Promise<any> => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.json({ success: false, message: "User already exists" }); // Always 200 OK
+      return res.json({ success: false, message: "Email already used." }); // Always 200 OK
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
