@@ -35,6 +35,7 @@ const Signup = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
   } = useForm<SignUpFormData>({ resolver: zodResolver(schema) });
 
   const handleSignUp = async (data: FieldValues) => {
@@ -44,12 +45,10 @@ const Signup = () => {
       });
 
       if (!response.data.success) {
-        toaster.create({
-          description: response.data.message,
-          type: "error",
-          duration: 2000,
-        });
-        reset();
+        setError("email", {
+          type: "manual",
+          message: response.data.message
+        })
         return;
       }
 
