@@ -16,6 +16,7 @@ import { Form, useNavigate } from "react-router";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email."),
@@ -32,13 +33,30 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<LoginFormData>({ resolver: zodResolver(schema) });
 
-  const handleLogin = (data: FieldValues) => {
-    // Perform login logic here
-    // On success:
+  const handleLogin = async (data: FieldValues) => {
+    try {
+      const response = await axios.post("/api/login", data);
 
-    console.log(data);
+      // just for debugging lolllll🤣🤣
+      console.log("Login Response:", response.data);
+
+      if (!response.data.success) {
+        setError("password", {
+          type: "manual",
+          message: "Invalid email or password.",
+        });
+        return;
+      }
+      const token = response.data.token;
+      localStorage.setItem("token", token);
+      console.log("Login successful!");
+      navigate("/");
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
   };
   return (
     <>
