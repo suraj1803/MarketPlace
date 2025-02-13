@@ -41,7 +41,7 @@ const Login = () => {
       const response = await axios.post("/api/login", data);
 
       // just for debugging lolllll🤣🤣
-      console.log("Login Response:", response.data);
+      // console.log("Login Response:", response.data);
 
       if (!response.data.success) {
         setError("password", {
