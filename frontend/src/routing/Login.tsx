@@ -52,7 +52,9 @@ const Login = () => {
       }
       const token = response.data.token;
       localStorage.setItem("token", token);
-      console.log("Login successful!");
+
+      // console.log("Login successful!");
+
       navigate("/");
     } catch (error) {
       console.error("An error occurred:", error);
@@ -91,12 +93,8 @@ const Login = () => {
             <Field.Label fontSize="lg" mb="2">
               Password
             </Field.Label>
-            <PasswordInput
-              {...register("password")}
-              id="password"
-              size="lg"
-              mb="4"
-            />
+            <PasswordInput {...register("password")} size="lg" />
+
             {errors.password && (
               <Text color={"red"} fontSize="sm" mb="4">
                 {errors.password.message}
