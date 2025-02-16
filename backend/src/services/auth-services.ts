@@ -32,7 +32,7 @@ export async function authenticateUser(email: string, password: string) {
   }
 
   const token = jwt.sign(
-    { id: user._id, email: user.email },
+    { _id: user._id, email: user.email },
     process.env.JWT_SECRET as string,
   );
   return { token, email: user.email, name: user.name };
