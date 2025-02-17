@@ -40,7 +40,7 @@ const Signup = () => {
 
   const handleSignUp = async (data: FieldValues) => {
     try {
-      const response = await axios.post("/api/signup", data, {
+      const response = await axios.post("/api/auth/signup", data, {
         headers: { "Content-Type": "application/json" },
       });
 

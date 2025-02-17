@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import dbConnect from "./src/db/dbConnect";
 import authRouter from "./src/routes/authRouter";
-import jwt from "jsonwebtoken";
 import privateRouter, { CustomRequest } from "./src/routes/protectedRoute";
 
 dotenv.config();
@@ -10,9 +9,9 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use("/auth", authRouter);
+app.use("/api/auth", authRouter);
 
-app.use("/private", privateRouter, (req, res) => {
+app.use(privateRouter, (req, res) => {
   console.log((req as CustomRequest).user);
 });
 
@@ -24,6 +23,6 @@ dbConnect()
       );
     });
   })
-  .catch((error) => {
+  .catch(() => {
     process.exit(1);
   });

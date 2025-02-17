@@ -6,7 +6,7 @@ export async function createUser(data: any) {
   try {
     const existingUser = await User.findOne({ email: data.email });
     if (existingUser) {
-      throw new Error("User already exists");
+      return { success: false, message: "User already exists" };
     }
     if (data.password.length < 6) {
       throw new Error("Password must be at least 6 characters long");
@@ -14,7 +14,7 @@ export async function createUser(data: any) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = new User({ ...data, password: hashedPassword });
     await user.save();
-    return user;
+    return { success: true, data: user };
   } catch (error) {
     throw error;
   }
@@ -23,17 +23,18 @@ export async function createUser(data: any) {
 export async function authenticateUser(email: string, password: string) {
   const user = await User.findOne({ email });
   if (!user) {
-    throw new Error("User not found.");
+    //throw new Error("User not found.");
+    return { success: false, message: "Invalid Credentials." };
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    throw new Error("Invalid Credentials.");
+    return { success: false, message: "Invalid Credentials." };
   }
 
   const token = jwt.sign(
     { _id: user._id, email: user.email },
     process.env.JWT_SECRET as string,
   );
-  return { token, email: user.email, name: user.name };
+  return { success: true, token, email: user.email, name: user.name };
 }

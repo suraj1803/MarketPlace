@@ -38,7 +38,7 @@ const Login = () => {
 
   const handleLogin = async (data: FieldValues) => {
     try {
-      const response = await axios.post("/api/login", data);
+      const response = await axios.post("/api/auth/login", data);
 
       // just for debugging lolllll🤣🤣
       // console.log("Login Response:", response.data);
