@@ -13,9 +13,8 @@ export async function createUser(data: any) {
     }
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = new User({ ...data, password: hashedPassword });
-    console.log(user);
     await user.save();
-    return { success: true, data: user };
+    return { success: true, message: "User Created Successfully", data: user };
   } catch (error) {
     throw error;
   }
