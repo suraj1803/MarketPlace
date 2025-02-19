@@ -13,6 +13,7 @@ export async function createUser(data: any) {
     }
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = new User({ ...data, password: hashedPassword });
+    console.log(user);
     await user.save();
     return { success: true, data: user };
   } catch (error) {
@@ -23,7 +24,6 @@ export async function createUser(data: any) {
 export async function authenticateUser(email: string, password: string) {
   const user = await User.findOne({ email });
   if (!user) {
-    //throw new Error("User not found.");
     return { success: false, message: "Invalid Credentials." };
   }
 

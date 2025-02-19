@@ -7,7 +7,7 @@ export async function registerUser(req: Request, res: Response) {
   try {
     const user = await createUser(req.body);
     if (!user.success) {
-      res.json({ success: false, message: user.message });
+      return res.json({ success: false, message: user.message });
     }
     res.status(200).json({ success: true, data: user });
   } catch (error: any) {
@@ -24,6 +24,6 @@ export async function loginUser(req: Request, res: Response): Promise<any> {
     }
     res.status(200).json({ ...result });
   } catch (error) {
-    res.status(400).json({ success: false, message: "Internal Server Error." });
+    res.status(400).json({ success: false, message: "Internal Server Error" });
   }
 }
