@@ -7,7 +7,6 @@ export interface CustomRequest extends Request {
   user: string | JwtPayload;
 }
 
-// refactor is needed
 privateRouter.get("/api", (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"]?.split(" ")[1];
   if (!authHeader) {

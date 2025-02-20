@@ -5,6 +5,8 @@ export interface UserDocument extends mongoose.Document {
   email: string;
   password: string;
   itemCount: number;
+  bio?: string;
+  profilePicture?: string;
 }
 
 const UserSchema = new mongoose.Schema<UserDocument>({
@@ -25,6 +27,12 @@ const UserSchema = new mongoose.Schema<UserDocument>({
   itemCount: {
     type: Number,
     default: 0,
+  },
+  bio: {
+    type: String,
+  },
+  profilePicture: {
+    type: String,
   },
 });
 
