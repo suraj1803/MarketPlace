@@ -6,6 +6,9 @@ const ItemSchema = new mongoose.Schema({
     required: [true, "Please provide a name."],
     unique: false,
   },
+  imgUrl: {
+    type: String,
+  },
   description: {
     type: String,
     required: [true, "Please give a short description."],
@@ -19,7 +22,11 @@ const ItemSchema = new mongoose.Schema({
   sellerId: {
     type: Schema.Types.ObjectId,
     ref: "User",
-    required: [true, "Please provide the owner's information"],
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 
