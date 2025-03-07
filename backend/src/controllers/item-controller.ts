@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Item from "../db/ItemModel";
+import User from "../db/userModel";
 
 export const createItem = async (req: Request, res: Response) => {
   try {
@@ -12,8 +13,54 @@ export const createItem = async (req: Request, res: Response) => {
       imgUrl,
     });
     await newItem.save();
+    await User.findByIdAndUpdate(sellerId, { $inc: { itemCount: 1 } });
     res.status(200).json({ success: true, message: newItem });
   } catch (error) {
     res.status(500).json({ message: error });
+  }
+};
+
+export const getAllItems = async (req: Request, res: Response) => {
+  try {
+    const items = await Item.find({});
+    res.json({ success: true, data: items });
+  } catch (error) {
+    res.status(404).json({ message: error });
+  }
+};
+
+export const getItem = async (req: Request, res: Response) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+    res.json({ success: true, data: item });
+  } catch (error) {
+    res.status(500).json({ message: (error as Error).message });
+  }
+};
+
+export const deleteItem = async (req: Request, res: Response) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ message: "Item not found" });
+    }
+    const user = await User.findById(item?.sellerId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if ((req as any).userId !== item.sellerId.toString()) {
+      return res.status(401).json({ message: "Unauthorized access" });
+    }
+
+    await Item.findByIdAndDelete(req.params.id);
+
+    await User.findByIdAndUpdate(user._id, { $inc: { itemCount: -1 } });
+
+    res.json({ success: true, data: item });
+  } catch (error) {
+    res.status(500).json({ message: (error as Error).message });
   }
 };

@@ -4,16 +4,19 @@ import dotenv, { configDotenv } from "dotenv";
 
 configDotenv();
 
+export interface AuthRequest extends Request {
+  userId: string;
+}
+
 export function isAuthenticated(
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction,
 ) {
   const token = req.header("Authorization")?.split(" ")[1];
 
   if (!token) {
-    res.status(401).json({ error: "Access denied" });
-    return;
+    return res.status(401).json({ error: "Access denied" });
   }
 
   // INFO: attached user id to the request
@@ -24,7 +27,8 @@ export function isAuthenticated(
       email: string;
     };
 
-    (req as any).userId = decoded._id;
+    req.userId = decoded._id;
+
     next();
   } catch (error) {
     res.status(401).json({ error: "Invalid token" });

@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
-import express, { Request, Response } from "express";
+import express from "express";
 import dbConnect from "./src/db/dbConnect";
 import authRouter from "./src/routes/authRouter";
-import privateRouter, { CustomRequest } from "./src/routes/protectedRoute";
+import privateRouter from "./src/routes/protectedRoute";
 import itemRouter from "./src/routes/itemRouter";
 import userRouter from "./src/routes/userRouter";
 
