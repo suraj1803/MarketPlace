@@ -1,10 +1,10 @@
 import { Link } from "react-router";
-import { PasswordInput } from "@/components/ui/password-input";
 import { Form, useNavigate } from "react-router";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { useAuth } from "../store/auth";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email."),
@@ -17,6 +17,9 @@ type LoginFormData = z.infer<typeof schema>;
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const { storeTokenInLocalStorage } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -35,7 +38,7 @@ const Login = () => {
         return;
       }
       const token = response.data.token;
-      localStorage.setItem("token", token);
+      storeTokenInLocalStorage(token);
       navigate("/");
     } catch (error) {
       console.error("An error occurred:", error);
@@ -43,9 +46,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="w-full max-w-md rounded-lg p-10 shadow-lg">
-        <h1 className="mb-7 text-3xl font-bold">Welcome</h1>
+    <div className="bg-gray-50 flex h-screen items-center justify-center">
+      <div className="bg-white w-full max-w-md rounded-lg p-10 shadow-sm">
+        <h1 className="mb-7 text-center text-3xl font-bold">Login</h1>
 
         <Form onSubmit={handleSubmit(handleLogin)}>
           <div className="mb-4">
@@ -72,7 +75,7 @@ const Login = () => {
             >
               Password
             </label>
-            <PasswordInput
+            <input
               {...register("password")}
               className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />

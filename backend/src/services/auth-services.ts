@@ -14,7 +14,16 @@ export async function createUser(data: any) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = new User({ ...data, password: hashedPassword });
     await user.save();
-    return { success: true, message: "User Created Successfully", data: user };
+    const token = jwt.sign(
+      { _id: user._id, email: user.email },
+      process.env.JWT_SECRET as string,
+    );
+    return {
+      success: true,
+      message: "User Created Successfully",
+      token,
+      userId: user._id ? user._id.toString() : "",
+    };
   } catch (error) {
     throw error;
   }

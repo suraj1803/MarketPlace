@@ -1,18 +1,7 @@
-import { Link } from "react-router";
-import { Text } from "@chakra-ui/react";
+import React from "react";
 
 const App = () => {
-  return (
-    <>
-      <Text>Home</Text>
-      <Text as={"u"} color={"teal"} ml={"7px"}>
-        <Link to="/login">Login</Link>
-      </Text>
-      <Text as={"u"} color={"teal"} ml={"7px"}>
-        <Link to="/signup">Signup</Link>
-      </Text>
-    </>
-  );
+  return <div>App</div>;
 };
 
 export default App;

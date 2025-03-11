@@ -5,11 +5,11 @@ dotenv.config();
 
 export async function registerUser(req: Request, res: Response) {
   try {
-    const userCreation = await createUser(req.body);
-    if (!userCreation.success) {
-      return res.json({ success: false, message: userCreation.message });
+    const userData = await createUser(req.body);
+    if (!userData.success) {
+      return res.json({ success: false, message: userData.message });
     }
-    res.status(200).json({ success: true, data: userCreation.data });
+    res.status(200).json({ ...userData });
   } catch (error: any) {
     res.status(400).json({ success: false, message: error.message });
   }
