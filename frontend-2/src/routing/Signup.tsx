@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, Link, useNavigate } from "react-router";
 import axios from "axios";
-import { useAuth } from "../store/auth";
+import useAuthStore from "../store/useAuthStore";
 
 // Toast type definitions
 type ToastType = "error" | "success";
@@ -95,12 +95,12 @@ type SignUpFormData = z.infer<typeof schema>;
 
 const Signup: React.FC = () => {
   const navigate = useNavigate();
-  const { storeTokenInLocalStorage } = useAuth();
   const [toast, setToast] = useState<ToastState>({
     visible: false,
     message: "",
     type: "error",
   });
+  const login = useAuthStore((state) => state.login);
 
   const {
     register,
@@ -130,9 +130,16 @@ const Signup: React.FC = () => {
         });
         return;
       }
+
+      // TODO: Remove this console.log
       console.log("Response from server : ", response.data);
+
       const token = response.data.token;
-      storeTokenInLocalStorage(token);
+      const userId = response.data.userId;
+      const email = data.email;
+
+      localStorage.setItem("token", token);
+      login(userId, email, token);
 
       showToast("Account created successfully!", "success");
       setTimeout(() => navigate("/"), 1000);

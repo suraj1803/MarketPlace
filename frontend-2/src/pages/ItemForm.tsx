@@ -1,6 +1,10 @@
+import { useForm } from "react-hook-form";
 import ImageUploader from "../components/ImageUploader";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const ItemForm = () => {
+  const navigate = useNavigate();
   const categories = [
     { id: "electronics", name: "Electronics" },
     { id: "clothing", name: "Clothing & Accessories" },
@@ -18,6 +22,13 @@ const ItemForm = () => {
     { id: "fair", name: "Fair" },
     { id: "poor", name: "Poor" },
   ];
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
   const handleUpload = (file: File) => {
     // Here you would typically:
     // 1. Create a FormData object
@@ -36,12 +47,50 @@ const ItemForm = () => {
 
     console.log("File to upload:", file);
   };
+
+  const onSubmit = async (data: any) => {
+    try {
+      const token = localStorage.getItem("token");
+      const userId = localStorage.getItem("userId"); // Assuming you store userId during login
+
+      if (!token || !userId) {
+        alert("Please login to list an item");
+        navigate("/login");
+        return;
+      }
+
+
+      const itemData = {
+        ...data,
+        sellerId: userId,
+        price: Number(data.price), // Ensure price is sent as a number
+      };
+
+      const response = await axios.post("/api/items/", itemData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.data.success) {
+        alert("Item listed successfully!");
+        navigate("/"); // Navigate to home page or items list
+      }
+    } catch (error: any) {
+      console.error("Error listing item:", error);
+      alert(
+        error.response?.data?.message || "Error listing item. Please try again."
+      );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-3xl mx-auto px-5">
         <div className="bg-white rounded-lg shadow p-6">
           <h1 className="text-2xl font-bold mb-6">List an item for sale</h1>
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="name"
@@ -51,6 +100,7 @@ const ItemForm = () => {
               </label>
 
               <input
+                {...register("name", { required: true })}
                 id="name"
                 type="text"
                 className="mt-1 w-full py-2 px-4 border border-gray-100 rounded-md shadow-sm text-sm focus:outline-none focus:ring focus:ring-indigo-500"
@@ -64,6 +114,7 @@ const ItemForm = () => {
                 Description <span className="text-red-500">*</span>{" "}
               </label>
               <textarea
+                {...register("description", { required: true })}
                 id="description"
                 rows={4}
                 className="w-full py-2 px-4 border-gray-100 rounded-md shadow-sm text-sm focus:outline-none focus:ring focus:ring-indigo-500"
@@ -78,6 +129,7 @@ const ItemForm = () => {
                 Price <span className="text-red-500">*</span>{" "}
               </label>
               <input
+                {...register("price", { required: true })}
                 id="price"
                 type="number"
                 className="mt-1 w-full py-2 px-4 border border-gray-100 rounded-md shadow-sm text-sm focus:outline-none focus:ring focus:ring-indigo-500"
@@ -92,6 +144,7 @@ const ItemForm = () => {
                   Category <span className="text-red-500">*</span>
                 </label>
                 <select
+                  {...register("category", { required: true })}
                   id="category"
                   className="mt-1 w-full py-2 px-4 border border-gray-100 rounded-md shadow-sm text-sm focus:outline-none focus:ring focus:ring-indigo-500"
                 >
@@ -112,6 +165,7 @@ const ItemForm = () => {
                   Condition
                 </label>
                 <select
+                  {...register("condition", { required: true })}
                   id="condition"
                   className="mt-1 w-full py-2 px-4 border border-gray-100 rounded-md shadow-sm text-sm focus:outline-none focus:ring focus:ring-indigo-500"
                 >
@@ -123,13 +177,30 @@ const ItemForm = () => {
                 </select>
               </div>
             </div>
-            <div>
+            {/* <div>
               <label></label>
               <ImageUploader
                 onUpload={handleUpload}
                 acceptedFileTypes="image/*"
                 maxSizeMB={5}
               ></ImageUploader>
+            </div> */}
+
+            {/* TODO: Add image uploader & remove the below div */}
+            <div>
+              <label
+                htmlFor="image"
+                className="text-sm font-medium text-gray-700"
+              >
+                Image Url<span className="text-red-500">*</span>{" "}
+              </label>
+
+              <input
+                {...register("imgUrl", { required: true })}
+                id="image"
+                type="text"
+                className="mt-1 w-full py-2 px-4 border border-gray-100 rounded-md shadow-sm text-sm focus:outline-none focus:ring focus:ring-indigo-500"
+              />
             </div>
 
             <div className="">

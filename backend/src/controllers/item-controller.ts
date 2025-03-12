@@ -4,17 +4,20 @@ import User from "../db/userModel";
 
 export const createItem = async (req: Request, res: Response) => {
   try {
-    const { name, description, price, sellerId, imgUrl } = req.body;
+    const { name, description, price, sellerId, imgUrl, category, condition } =
+      req.body;
     const newItem = new Item({
       name,
       description,
       price,
       sellerId,
+      category,
+      condition,
       imgUrl,
     });
     await newItem.save();
     await User.findByIdAndUpdate(sellerId, { $inc: { itemCount: 1 } });
-    res.status(200).json({ success: true, message: newItem });
+    res.status(200).json({ success: true, data: newItem });
   } catch (error) {
     res.status(500).json({ message: error });
   }

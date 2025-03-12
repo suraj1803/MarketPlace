@@ -23,6 +23,7 @@ export async function createUser(data: any) {
       message: "User Created Successfully",
       token,
       userId: user._id ? user._id.toString() : "",
+      email: user.email,
     };
   } catch (error) {
     throw error;
@@ -44,5 +45,11 @@ export async function authenticateUser(email: string, password: string) {
     { _id: user._id, email: user.email },
     process.env.JWT_SECRET as string,
   );
-  return { success: true, token, email: user.email, name: user.name };
+  return {
+    success: true,
+    token,
+    email: user.email,
+    name: user.name,
+    userId: user._id ? user._id.toString() : "",
+  };
 }

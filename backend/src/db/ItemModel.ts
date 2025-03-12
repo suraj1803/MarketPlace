@@ -19,6 +19,16 @@ const ItemSchema = new mongoose.Schema({
     required: [true, "Please provide price."],
     unique: false,
   },
+  category: {
+    type: String,
+    required: [true, "Please provide a category."],
+    unique: false,
+  },
+  condition: {
+    type: String,
+    required: [true, "Please provide a condition."],
+    unique: false,
+  },
   sellerId: {
     type: Schema.Types.ObjectId,
     ref: "User",

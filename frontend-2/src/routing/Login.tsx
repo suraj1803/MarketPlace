@@ -4,7 +4,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { useAuth } from "../store/auth";
+import useAuthStore from "../store/useAuthStore";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email."),
@@ -17,8 +17,7 @@ type LoginFormData = z.infer<typeof schema>;
 
 const Login = () => {
   const navigate = useNavigate();
-
-  const { storeTokenInLocalStorage } = useAuth();
+  const login = useAuthStore((state) => state.login);
 
   const {
     register,
@@ -37,8 +36,14 @@ const Login = () => {
         });
         return;
       }
+
+      // TODO: Remove this console.log
+      console.log("Response from server : ", response.data);
+
       const token = response.data.token;
-      storeTokenInLocalStorage(token);
+      const userId = response.data.userId;
+      const email = data.email;
+      login(userId, email, token);
       navigate("/");
     } catch (error) {
       console.error("An error occurred:", error);
