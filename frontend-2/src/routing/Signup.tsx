@@ -153,7 +153,7 @@ const Signup: React.FC = () => {
     <>
       <div className="bg-gray-100 flex items-center justify-center h-screen">
         <div className="bg-white w-full max-w-md rounded-lg p-10 shadow-sm ">
-          <h1 className="text-3xl font-bold mb-7">Signup</h1>
+          <h1 className="text-3xl text-center font-bold mb-7">Signup</h1>
 
           <Form className="space-y-4" onSubmit={handleSubmit(handleSignUp)}>
             <div>

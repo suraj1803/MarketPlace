@@ -50,8 +50,9 @@ const ItemForm = () => {
 
   const onSubmit = async (data: any) => {
     try {
+      console.log("Form Data Before Sending:", data); // Debugging
       const token = localStorage.getItem("token");
-      const userId = localStorage.getItem("userId"); // Assuming you store userId during login
+      const userId = localStorage.getItem("userId");
 
       if (!token || !userId) {
         alert("Please login to list an item");
@@ -59,12 +60,34 @@ const ItemForm = () => {
         return;
       }
 
+      // Image upload
+      const file = data.image[0];
+      const formData = new FormData();
+      formData.append("image", file);
 
+      const uploadResponse = await axios.post("/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (!uploadResponse.data.success) {
+        throw new Error(uploadResponse.data.message || "Image upload failed");
+      }
+
+      const imgUrl = uploadResponse.data.data.url;
+
+      // Item data submission
       const itemData = {
         ...data,
         sellerId: userId,
-        price: Number(data.price), // Ensure price is sent as a number
+        price: Number(data.price),
+        imgUrl,
       };
+
+      // Remove the image file from the data being sent to prevent circular reference
+      delete itemData.image;
+      console.log(itemData);
 
       const response = await axios.post("/api/items/", itemData, {
         headers: {
@@ -75,12 +98,14 @@ const ItemForm = () => {
 
       if (response.data.success) {
         alert("Item listed successfully!");
-        navigate("/"); // Navigate to home page or items list
+        navigate("/");
       }
     } catch (error: any) {
       console.error("Error listing item:", error);
       alert(
-        error.response?.data?.message || "Error listing item. Please try again."
+        error.response?.data?.message ||
+          error.message ||
+          "Error listing item. Please try again.",
       );
     }
   };
@@ -192,13 +217,13 @@ const ItemForm = () => {
                 htmlFor="image"
                 className="text-sm font-medium text-gray-700"
               >
-                Image Url<span className="text-red-500">*</span>{" "}
+                Image <span className="text-red-500">*</span>{" "}
               </label>
 
               <input
-                {...register("imgUrl", { required: true })}
+                {...register("image", { required: true })}
                 id="image"
-                type="text"
+                type="file"
                 className="mt-1 w-full py-2 px-4 border border-gray-100 rounded-md shadow-sm text-sm focus:outline-none focus:ring focus:ring-indigo-500"
               />
             </div>
