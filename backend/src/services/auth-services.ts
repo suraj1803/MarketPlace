@@ -2,6 +2,30 @@ import User from "../db/userModel";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+const secret_key = process.env.JWT_SECRET as string;
+
+interface UserInterface {
+  _id: string;
+  email: string;
+  name: string;
+}
+
+interface TokenPayLoad {
+  _id: String;
+  name: String;
+  email: String;
+}
+
+export async function generateToken(user: UserInterface, secret_key: string) {
+  const payload: TokenPayLoad = {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+  };
+
+  return jwt.sign(payload, secret_key);
+}
+
 export async function createUser(data: any) {
   try {
     const existingUser = await User.findOne({ email: data.email });
@@ -14,10 +38,7 @@ export async function createUser(data: any) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
     const user = new User({ ...data, password: hashedPassword });
     await user.save();
-    const token = jwt.sign(
-      { _id: user._id, email: user.email },
-      process.env.JWT_SECRET as string,
-    );
+    const token = await generateToken(user as UserInterface, secret_key);
     return {
       success: true,
       message: "User Created Successfully",
@@ -41,10 +62,7 @@ export async function authenticateUser(email: string, password: string) {
     return { success: false, message: "Invalid Credentials." };
   }
 
-  const token = jwt.sign(
-    { _id: user._id, email: user.email },
-    process.env.JWT_SECRET as string,
-  );
+  const token = await generateToken(user as UserInterface, secret_key);
   return {
     success: true,
     token,

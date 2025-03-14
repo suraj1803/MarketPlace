@@ -8,6 +8,8 @@ const ItemSchema = new mongoose.Schema({
   },
   imgUrl: {
     type: String,
+    required: [true, "Please provide an image."],
+    unique: false,
   },
   description: {
     type: String,

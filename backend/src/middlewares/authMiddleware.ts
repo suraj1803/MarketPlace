@@ -27,6 +27,6 @@ export function isAuthenticated(
     (req as any).userId = decoded._id;
     next();
   } catch (error) {
-    res.status(401).json({ error: "Invalid token" });
+    res.status(401).json({ error: "Access is Denied" });
   }
 }
