@@ -18,6 +18,11 @@ if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
 }
 
+// Create uploads directory if it doesn't exist
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,7 +39,7 @@ dbConnect()
   .then(() => {
     app.listen(process.env.PORT, () => {
       console.log(
-        `Server is running on port https://localhost:${process.env.PORT}`,
+        `Server is running on port https://localhost:${process.env.PORT}`
       );
     });
   })

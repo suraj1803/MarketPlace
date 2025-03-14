@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import multer from "multer";
 import { uploadImage } from "../controllers/upload-controller";
+import { isAuthenticated } from "../middlewares/authMiddleware";
 
 const uploadRoute = express.Router();
 
@@ -31,6 +32,6 @@ const upload = multer({
   limits: { fileSize: 7 * 1024 * 1024 },
 });
 
-uploadRoute.post("/", upload.single("image"), uploadImage);
+uploadRoute.post("/", isAuthenticated, upload.single("image"), uploadImage);
 
 export default uploadRoute;

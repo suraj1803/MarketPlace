@@ -10,7 +10,7 @@ interface UserInterface {
   name: string;
 }
 
-interface TokenPayLoad {
+export interface TokenPayLoad {
   _id: String;
   name: String;
   email: String;
