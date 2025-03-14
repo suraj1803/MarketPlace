@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import ImageUploader from "../components/ImageUploader";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 
 const ItemForm = () => {
@@ -50,7 +50,9 @@ const ItemForm = () => {
 
   const onSubmit = async (data: any) => {
     try {
+      // TODO: remove the console log
       console.log("Form Data Before Sending:", data); // Debugging
+
       const token = localStorage.getItem("token");
       const userId = localStorage.getItem("userId");
 
@@ -67,6 +69,7 @@ const ItemForm = () => {
 
       const uploadResponse = await axios.post("/api/upload", formData, {
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -87,7 +90,6 @@ const ItemForm = () => {
 
       // Remove the image file from the data being sent to prevent circular reference
       delete itemData.image;
-      console.log(itemData);
 
       const response = await axios.post("/api/items/", itemData, {
         headers: {
@@ -101,17 +103,15 @@ const ItemForm = () => {
         navigate("/");
       }
     } catch (error: any) {
+      // TODO: remove the console log
       console.error("Error listing item:", error);
-      alert(
-        error.response?.data?.message ||
-          error.message ||
-          "Error listing item. Please try again.",
-      );
+
+      alert(error.response?.data?.message || "Failed to list item");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="bg-gray-50 flex h-screen items-center justify-center">
       <div className="max-w-3xl mx-auto px-5">
         <div className="bg-white rounded-lg shadow p-6">
           <h1 className="text-2xl font-bold mb-6">List an item for sale</h1>

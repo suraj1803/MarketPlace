@@ -151,8 +151,8 @@ const Signup: React.FC = () => {
 
   return (
     <>
-      <div className="bg-gray-100 flex items-center justify-center h-screen">
-        <div className="bg-white w-full max-w-md rounded-lg p-10 shadow-sm ">
+      <div className="bg-gray-50 flex h-screen items-center justify-center">
+        <div className="w-full max-w-sm sm:max-w-md sm:rounded-lg p-10 sm:shadow-sm">
           <h1 className="text-3xl text-center font-bold mb-7">Signup</h1>
 
           <Form className="space-y-4" onSubmit={handleSubmit(handleSignUp)}>
@@ -164,7 +164,7 @@ const Signup: React.FC = () => {
                 {...register("name")}
                 id="name"
                 placeholder="John Doe"
-                className="w-full p-3 border rounded-md"
+                className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {errors.name && (
                 <p className="text-red-500 text-sm mt-1">
@@ -181,7 +181,7 @@ const Signup: React.FC = () => {
                 {...register("email")}
                 id="email"
                 placeholder="johndoe@gmail.com"
-                className="w-full p-3 border rounded-md"
+                className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {errors.email && (
                 <p className="text-red-500 text-sm mt-1">
@@ -197,7 +197,7 @@ const Signup: React.FC = () => {
               <input
                 {...register("password")}
                 id="password"
-                className="w-full p-3 border rounded-md"
+                className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               />
               {errors.password && (
                 <p className="text-red-500 text-sm mt-1">
