@@ -1,0 +1,1 @@
+gpg --decrypt myfile.txt.gpg > myfile.txt
