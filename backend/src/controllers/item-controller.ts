@@ -25,7 +25,7 @@ export const createItem = async (req: Request, res: Response) => {
 
 export const getAllItems = async (req: Request, res: Response) => {
   try {
-    const items = await Item.find({});
+    const items = await Item.find({}).populate("sellerId", "name email");
     res.json({ success: true, items });
   } catch (error) {
     res.status(404).json({ message: error });
