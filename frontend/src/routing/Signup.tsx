@@ -1,20 +1,85 @@
-import {
-  Text,
-  VStack,
-  Field,
-  Input,
-  Flex,
-  Heading,
-  Button,
-} from "@chakra-ui/react";
-import { Toaster, toaster } from "@/components/ui/toaster";
-import { PasswordInput } from "@/components/ui/password-input";
-import Navbar from "../components/NavBar";
+import React, { useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, Link, useNavigate } from "react-router";
 import axios from "axios";
+import useAuthStore from "../store/useAuthStore";
+
+// Toast type definitions
+type ToastType = "error" | "success";
+type ToastState = {
+  visible: boolean;
+  message: string;
+  type: ToastType;
+};
+
+interface ToastProps {
+  message: string;
+  type: ToastType;
+  onClose: () => void;
+}
+
+// Custom Toast Component
+const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => {
+  return (
+    <div
+      className={`fixed bottom-4 right-4 flex items-center p-4 rounded-md shadow-lg transition-all duration-300 
+      ${type === "error" ? "bg-red-500" : "bg-green-500"} text-white`}
+    >
+      <div className="mr-3">
+        {type === "error" ? (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        ) : (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        )}
+      </div>
+      <p>{message}</p>
+      <button onClick={onClose} className="ml-4">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+    </div>
+  );
+};
 
 const schema = z.object({
   name: z
@@ -28,8 +93,15 @@ const schema = z.object({
 
 type SignUpFormData = z.infer<typeof schema>;
 
-const Signup = () => {
+const Signup: React.FC = () => {
   const navigate = useNavigate();
+  const [toast, setToast] = useState<ToastState>({
+    visible: false,
+    message: "",
+    type: "error",
+  });
+  const login = useAuthStore((state) => state.login);
+
   const {
     register,
     handleSubmit,
@@ -38,7 +110,14 @@ const Signup = () => {
     setError,
   } = useForm<SignUpFormData>({ resolver: zodResolver(schema) });
 
-  const handleSignUp = async (data: FieldValues) => {
+  const showToast = (message: string, type: ToastType = "error"): void => {
+    setToast({ visible: true, message, type });
+    setTimeout(() => {
+      setToast({ visible: false, message: "", type: "error" });
+    }, 3000);
+  };
+
+  const handleSignUp = async (data: FieldValues): Promise<void> => {
     try {
       const response = await axios.post("/api/auth/signup", data, {
         headers: { "Content-Type": "application/json" },
@@ -52,98 +131,108 @@ const Signup = () => {
         return;
       }
 
-      console.log("User created successfully:", response.data);
-      navigate("/");
-    } catch (error: any) {
-      reset();
+      // TODO: Remove this console.log
+      console.log("Response from server : ", response.data);
 
-      toaster.create({
-        description: "Network error or server unreachable",
-        type: "error",
-        duration: 2000,
-      });
+      const token = response.data.token;
+      const userId = response.data.userId;
+      const email = data.email;
+
+      localStorage.setItem("token", token);
+      login(userId, email, token);
+
+      showToast("Account created successfully!", "success");
+      setTimeout(() => navigate("/"), 1000);
+    } catch (error) {
+      reset();
+      showToast("Network error or server unreachable");
     }
   };
 
   return (
     <>
-      <Navbar></Navbar>
-      <Flex height="100vh" align="center" justify="center">
-        <VStack
-          p="10"
-          boxShadow="lg"
-          borderRadius="lg"
-          width={{ base: "90%", sm: "400px" }}
-        >
-          <Heading mb={7} textStyle={"3xl"}>
-            Signup
-          </Heading>
+      <div className="bg-gray-50 flex h-screen items-center justify-center">
+        <div className="w-full max-w-sm sm:max-w-md sm:rounded-lg p-10 sm:shadow-sm">
+          <h1 className="text-3xl text-center font-bold mb-7">Signup</h1>
 
-          <Field.Root as={Form} onSubmit={handleSubmit(handleSignUp)}>
-            <Field.Label fontSize="lg" mb="2">
-              Name
-            </Field.Label>
-            <Input
-              {...register("name")}
-              id="name"
-              placeholder="John Doe"
-              size="lg"
-              mb="4"
-            />
-            {errors.name && (
-              <Text color={"red"} fontSize="sm" mb="4">
-                {errors.name.message}
-              </Text>
-            )}
-            <Field.Label fontSize="lg" mb="2">
-              Email
-            </Field.Label>
-            <Input
-              {...register("email")}
-              id="email"
-              placeholder="johndoe@gmail.com"
-              size="lg"
-              mb="4"
-            />
-            {errors.email && (
-              <Text color={"red"} fontSize="sm" mb="4">
-                {errors.email.message}
-              </Text>
-            )}
-            <Field.Label fontSize="lg" mb="2">
-              Password
-            </Field.Label>
-            <PasswordInput
-              {...register("password")}
-              id="password"
-              size="lg"
-              mb="4"
-            />
-            {errors.password && (
-              <Text color={"red"} fontSize="sm">
-                {errors.password.message}
-              </Text>
-            )}
+          <Form className="space-y-4" onSubmit={handleSubmit(handleSignUp)}>
+            <div>
+              <label htmlFor="name" className="block text-lg mb-2">
+                Name
+              </label>
+              <input
+                {...register("name")}
+                id="name"
+                placeholder="John Doe"
+                className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+              {errors.name && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.name.message}
+                </p>
+              )}
+            </div>
 
-            <Button
+            <div>
+              <label htmlFor="email" className="block text-lg mb-2">
+                Email
+              </label>
+              <input
+                {...register("email")}
+                id="email"
+                placeholder="johndoe@gmail.com"
+                className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="password" className="block text-lg mb-2">
+                Password
+              </label>
+              <input
+                {...register("password")}
+                id="password"
+                className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            <button
               type="submit"
-              fontSize={"md"}
-              mt={7}
-              paddingX={7}
-              width={"100%"}
+              className="w-full bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-md font-medium mt-6"
             >
               SIGN UP
-            </Button>
-          </Field.Root>
-          <Text fontSize={"14px"} mt="5">
-            Already have an account ?
-            <Text as={"u"} color={"teal"} ml={"7px"}>
-              <Link to="/login">Login now</Link>
-            </Text>
-          </Text>
-          <Toaster />
-        </VStack>
-      </Flex>
+            </button>
+          </Form>
+
+          <p className="text-sm mt-5">
+            Already have an account?
+            <Link to="/login" className="underline text-teal-500 ml-2">
+              Login now
+            </Link>
+          </p>
+        </div>
+      </div>
+
+      {/* Custom Toast */}
+      {toast.visible && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() =>
+            setToast({ visible: false, message: "", type: "error" })
+          }
+        />
+      )}
     </>
   );
 };

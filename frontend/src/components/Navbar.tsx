@@ -1,30 +1,46 @@
-import shoppingLogo from "../assets/trolley.png";
-import userLogo from "../assets/profile.png";
+import useAuthStore from "../store/useAuthStore";
+import { useNavigate } from "react-router";
+import MobileNav from "./MobileNav";
+import { FaShoppingBag } from "react-icons/fa";
+import { IoMdExit } from "react-icons/io";
+
 const Navbar = () => {
+  const { logout } = useAuthStore();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
   return (
-    <nav className="sticky top-0 z-50 bg-gray-800">
-      <div className="p-3 mx-auto max-w-7xl flex justify-between">
-        <div>
-          <a href="/">
-            <div className="flex items-center justify-between gap-2">
-              <img
-                src={shoppingLogo}
-                className="w-10 cursor-pointer hover:opacity-75"
-              />
-              <p className="text-white font-bold">MarketPlace</p>
-            </div>
-          </a>
+    <header className="bg-blue-800 sticky top-0 z-50 ">
+      <div className="container mx-auto max-w-7xl flex justify-between items-center p-2 h-15">
+        <a
+          className="flex items-center text-white hover:cursor-pointer"
+          onClick={() => navigate("/")}
+        >
+          <FaShoppingBag className="text-xl "></FaShoppingBag>
+          <span className="ml-3 text-xl font-semibold">MarketPlace</span>
+        </a>
+
+        <div className="md:flex items-center gap-4 hidden">
+          <button
+            onClick={() => {
+              navigate("/post");
+            }}
+            className="flex items-center gap-1  font-semibold bg-none text-white hover:text-gray-300  transition-all hover:cursor-pointer"
+          >
+            <FaShoppingBag className="text-md" /> Sell Item
+          </button>
+          <button
+            className="flex items-center gap-1.5 bg-none font-semibold text-white hover:text-gray-300 rounded  hover:cursor-pointer"
+            onClick={handleLogout}
+          >
+            Logout <IoMdExit className="text-lg" />
+          </button>
         </div>
-        <div>
-          <a href="/profile">
-            <img
-              src={userLogo}
-              className="w-10 cursor-pointer hover:opacity-75"
-            />
-          </a>
-        </div>
+        <MobileNav></MobileNav>
       </div>
-    </nav>
+    </header>
   );
 };
 

@@ -34,12 +34,15 @@ export const getAllItems = async (req: Request, res: Response) => {
 
 export const getItem = async (req: Request, res: Response) => {
   try {
-    const item = await Item.findById(req.params.id);
+    const item = await Item.findById(req.params.id).populate(
+      "sellerId",
+      "name email",
+    );
     if (!item) {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    res.json({ success: true, data: item });
+    res.json({ success: true, item });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }

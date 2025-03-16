@@ -1,10 +1,10 @@
 import { Link } from "react-router";
-import { PasswordInput } from "@/components/ui/password-input";
 import { Form, useNavigate } from "react-router";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import useAuthStore from "../store/useAuthStore";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email."),
@@ -17,6 +17,8 @@ type LoginFormData = z.infer<typeof schema>;
 
 const Login = () => {
   const navigate = useNavigate();
+  const login = useAuthStore((state) => state.login);
+
   const {
     register,
     handleSubmit,
@@ -34,8 +36,14 @@ const Login = () => {
         });
         return;
       }
+
+      // TODO: Remove this console.log
+      console.log("Response from server : ", response.data);
+
       const token = response.data.token;
-      localStorage.setItem("token", token);
+      const userId = response.data.userId;
+      const email = data.email;
+      login(userId, email, token);
       navigate("/");
     } catch (error) {
       console.error("An error occurred:", error);
@@ -43,9 +51,9 @@ const Login = () => {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="w-full max-w-md rounded-lg p-10 shadow-lg">
-        <h1 className="mb-7 text-3xl font-bold">Welcome</h1>
+    <div className="bg-gray-50 flex h-screen items-center justify-center">
+      <div className="w-full max-w-sm sm:max-w-md sm:rounded-lg p-10 sm:shadow-sm">
+        <h1 className="mb-7 text-center text-3xl font-bold">Login</h1>
 
         <Form onSubmit={handleSubmit(handleLogin)}>
           <div className="mb-4">
@@ -57,6 +65,7 @@ const Login = () => {
               id="email"
               className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="me@example.com"
+              autoComplete="email"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-600">
@@ -72,7 +81,8 @@ const Login = () => {
             >
               Password
             </label>
-            <PasswordInput
+            <input
+              id="password"
               {...register("password")}
               className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />

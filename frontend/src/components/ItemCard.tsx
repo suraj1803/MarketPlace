@@ -1,26 +1,36 @@
-import UserLogo from "../assets/profile.png";
+import { Link } from "react-router";
+import { Item } from "../App";
+import useItemStore from "../store/useItemStore";
+
 interface Props {
-  name: string;
-  description: string;
-  imageUrl: string;
-  price: number;
+  item: Item;
 }
 
-const ItemCard = ({ name, description, price, imageUrl }: Props) => {
+const ItemCard = ({ item }: Props) => {
+  const { setCurrentItem } = useItemStore();
+
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4">
-      <div className="w-full h-40 bg-gray-100 flex items-center justify-center rounded-t-lg">
-        <img src={UserLogo} className="w-full h-full object-contain" />
+    <div className="bg-white rounded-lg p-3 border border-gray-300 transition-all hover:shadow-lg hover:cursor-pointer">
+      {/* Product Image */}
+      <div className="h-44 bg-gray-50 mb-3 rounded overflow-hidden">
+        <img
+          src={item.imgUrl}
+          alt={item.name}
+          className="w-full h-full object-contain"
+        />
       </div>
 
-      <div className="p-3">
-        <h2 className="text-lg font-semibold">{name}</h2>
-        <p className="text-blue-600 font-bold text-md">${price}</p>
+      {/* Product Details */}
+      <p className="text-xl font-bold">₹ {item.price.toLocaleString()}</p>
 
-        <div className="flex justify-between text-gray-500 text-sm mt-2">
-          <span>{description}</span>
-        </div>
-      </div>
+      <h3 className="truncate mb-2">{item.name}</h3>
+      <Link
+        to={`/items/${item._id}`}
+        className="text-blue-600 hover:underline"
+        onClick={() => setCurrentItem(item._id)}
+      >
+        View Details&rarr;
+      </Link>
     </div>
   );
 };

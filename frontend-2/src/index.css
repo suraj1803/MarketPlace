@@ -1,4 +1,0 @@
-@import "tailwindcss";
-nav a {
-  @apply hover:text-gray-200 hover:cursor-pointer;
-}
