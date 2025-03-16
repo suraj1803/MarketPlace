@@ -1,31 +1,30 @@
-import { Link, useNavigate } from "react-router-dom";
-import useAuthStore from "./store/useAuthStore";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import ItemCard from "./components/ItemCard";
+import Navbar from "./components/Navbar";
+import toast, { Toaster } from "react-hot-toast";
 
-interface Item {
-  _id: number;
+export interface Item {
+  _id: string;
   name: string;
   description: string;
   price: number;
-  sellerId: string;
+  sellerId: any;
   category: string;
   condition: string;
   imgUrl: string;
+  sellerName: string;
 }
 
 const App = () => {
-  const { logout } = useAuthStore();
-  const navigate = useNavigate();
-
   const [items, setItems] = useState<Item[]>([]);
 
   useEffect(() => {
     const fetchItems = async () => {
       try {
         const response = await axios.get("/api/items");
-        console.log("Items from server:", response.data.data);
-        setItems(response.data.data);
+        console.log("Items from server:", response.data.items);
+        setItems(response.data.items);
       } catch (error) {
         console.error("Error fetching items:", error);
       }
@@ -34,46 +33,34 @@ const App = () => {
     fetchItems();
   }, []);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+  const notify = () => toast.success("Clicked");
+
   return (
-    <div className="m-2">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-4xl font-bold">DashBoard</h1>
-        <div>
-          <Link
-            className="bg-teal-500 text-white px-4 py-2 rounded hover:bg-teal-600 transition-colors"
-            to="/post"
-          >
-            Post
-          </Link>
-        </div>
-        <button
-          onClick={handleLogout}
-          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
-        >
-          Logout
-        </button>
-      </div>
+    <>
       <div>
-        {items.map((item) => (
-          <div
-            key={item._id}
-            className="grid grid-cols-2 gap-2 text-md font-semibold text-blue-600 mb-8"
-          >
-            <div className="flex gap-2  items-center">
-              <span>{items.indexOf(item) + 1}</span>
-              <span>{item.name}</span>
-            </div>
-            <div className="w-20 h-20">
-              <img src={item.imgUrl} alt="image" />
-            </div>
-          </div>
-        ))}
+        <Toaster></Toaster>
       </div>
-    </div>
+      <Navbar />
+      <div className="p-5 flex justify-center">
+        <div className="w-full max-w-7xl">
+          <div
+            onClick={notify}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+          >
+            {items.map((item) => (
+              <ItemCard
+                key={item._id}
+                _id={item._id}
+                name={item.name}
+                price={item.price}
+                imgUrl={item.imgUrl}
+                sellerId={item.sellerId}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

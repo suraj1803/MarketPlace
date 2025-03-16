@@ -4,6 +4,7 @@ import Login from "./Login";
 import ItemForm from "../pages/ItemForm";
 import Signup from "./Signup";
 import PrivateRouter from "./PrivateRouter";
+import ItemDetails from "../pages/ItemDetails";
 
 const router = createBrowserRouter([
   {
@@ -11,6 +12,7 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <App /> },
       { path: "/post", element: <ItemForm /> },
+      { path: "/items/:id", element: <ItemDetails /> },
     ],
   },
   { path: "/login", element: <Login /> },
