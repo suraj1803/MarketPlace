@@ -38,25 +38,27 @@ const App = () => {
   return (
     <>
       <div>
-        <Toaster></Toaster>
-      </div>
-      <Navbar />
-      <div className="p-5 flex justify-center">
-        <div className="w-full max-w-7xl">
-          <div
-            onClick={notify}
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-          >
-            {items.map((item) => (
-              <ItemCard
-                key={item._id}
-                _id={item._id}
-                name={item.name}
-                price={item.price}
-                imgUrl={item.imgUrl}
-                sellerId={item.sellerId}
-              />
-            ))}
+        <div>
+          <Toaster></Toaster>
+        </div>
+        <Navbar />
+        <div className="p-5 flex justify-center">
+          <div className="w-full max-w-7xl">
+            <div
+              onClick={notify}
+              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+            >
+              {items.map((item) => (
+                <ItemCard
+                  key={item._id}
+                  _id={item._id}
+                  name={item.name}
+                  price={item.price}
+                  imgUrl={item.imgUrl}
+                  sellerId={item.sellerId}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

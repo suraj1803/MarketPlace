@@ -26,7 +26,7 @@ export const createItem = async (req: Request, res: Response) => {
 export const getAllItems = async (req: Request, res: Response) => {
   try {
     const items = await Item.find({});
-    res.json({ success: true, data: items });
+    res.json({ success: true, items });
   } catch (error) {
     res.status(404).json({ message: error });
   }
@@ -38,6 +38,7 @@ export const getItem = async (req: Request, res: Response) => {
     if (!item) {
       return res.status(404).json({ message: "Item not found" });
     }
+
     res.json({ success: true, data: item });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });

@@ -65,6 +65,7 @@ const Login = () => {
               id="email"
               className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               placeholder="me@example.com"
+              autoComplete="email"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-600">
@@ -81,6 +82,7 @@ const Login = () => {
               Password
             </label>
             <input
+              id="password"
               {...register("password")}
               className="w-full rounded-md border border-gray-300 p-3 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             />

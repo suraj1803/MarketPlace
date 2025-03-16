@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
+import { TiThMenu } from "react-icons/ti";
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,9 +17,9 @@ export default function MobileNav() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden bg-blue-600 text-white hover:cursor-pointer"
+        className="md:hidden text-white hover:cursor-pointer"
       >
-        ☰
+        <TiThMenu className="text-xl"></TiThMenu>
       </button>
 
       {/* Side Navigation */}
