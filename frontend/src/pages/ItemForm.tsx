@@ -2,8 +2,10 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import useItemStore from "../store/useItemStore";
 
 const ItemForm = () => {
+  const { addItem } = useItemStore();
   const navigate = useNavigate();
   const categories = [
     { id: "electronics", name: "Electronics" },
@@ -72,17 +74,9 @@ const ItemForm = () => {
       // Remove the image file from the data being sent to prevent circular reference
       delete itemData.image;
 
-      const response = await axios.post("/api/items/", itemData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.data.success) {
-        alert("Item listed successfully!");
-        navigate("/");
-      }
+      addItem(itemData, token);
+      alert("Item Listed Successfully.");
+      navigate("/");
     } catch (error: any) {
       // TODO: remove the console log
       console.error("Error listing item:", error);
@@ -90,7 +84,6 @@ const ItemForm = () => {
       alert(error.response?.data?.message || "Failed to list item");
     }
   };
-
   return (
     <>
       <nav className="bg-blue-700 flex items-center sticky top-0 z-50 h-15">

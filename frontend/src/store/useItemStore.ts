@@ -9,6 +9,7 @@ interface ItemStore {
   error: any;
   fetchItems: () => Promise<void>;
   setCurrentItem: (item: any) => void;
+  addItem: (item: Item, token: string) => void;
 }
 
 const useItemStore = create<ItemStore>((set, get) => ({
@@ -18,12 +19,35 @@ const useItemStore = create<ItemStore>((set, get) => ({
   error: null,
 
   fetchItems: async () => {
-    set({ isLoading: true, error: null });
+    set({ isLoading: true });
     try {
       const response = await axios.get("/api/items");
-      set({ items: response.data.items, isLoading: false });
+      console.log("Items list from server: ", response.data.items);
+      if (response.data.items.length != get().items.length) {
+        set({ items: response.data.items, isLoading: false });
+      }
+      set({ isLoading: false });
+    } catch (error) {
+      set({ error: (error as Error).message });
+    }
+  },
+
+  addItem: async (item: Item, token: string) => {
+    try {
+      set({ isLoading: true, error: null });
+      const response = await axios.post("/api/items/", item, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      set({ items: [...get().items, item], isLoading: false });
     } catch (error) {
       set({ error: (error as Error).message, isLoading: false });
+      throw error;
     }
   },
 

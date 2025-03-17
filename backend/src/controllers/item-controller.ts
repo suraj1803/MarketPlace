@@ -6,7 +6,7 @@ export const createItem = async (req: Request, res: Response) => {
   try {
     const { name, description, price, sellerId, imgUrl, category, condition } =
       req.body;
-    const newItem = new Item({
+    const item = new Item({
       name,
       description,
       price,
@@ -15,9 +15,9 @@ export const createItem = async (req: Request, res: Response) => {
       condition,
       imgUrl,
     });
-    await newItem.save();
+    await item.save();
     await User.findByIdAndUpdate(sellerId, { $inc: { itemCount: 1 } });
-    res.status(200).json({ success: true, data: newItem });
+    res.status(200).json({ success: true, item });
   } catch (error) {
     res.status(500).json({ message: error });
   }

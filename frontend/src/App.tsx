@@ -22,7 +22,7 @@ const App = () => {
 
   useEffect(() => {
     fetchItems();
-  }, [items.length]);
+  }, []);
 
   if (isLoading) {
     return (
