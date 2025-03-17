@@ -29,7 +29,7 @@ const filterFilter = (
 const upload = multer({
   storage,
   fileFilter: filterFilter,
-  limits: { fileSize: 7 * 1024 * 1024 },
+  limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 uploadRoute.post("/", isAuthenticated, upload.single("image"), uploadImage);

@@ -18,8 +18,6 @@ const useItemStore = create<ItemStore>((set, get) => ({
   error: null,
 
   fetchItems: async () => {
-    const { items } = get();
-    if (items.length > 0) return;
     set({ isLoading: true, error: null });
     try {
       const response = await axios.get("/api/items");

@@ -29,25 +29,6 @@ const ItemForm = () => {
     formState: { errors },
   } = useForm();
 
-  const handleUpload = (file: File) => {
-    // Here you would typically:
-    // 1. Create a FormData object
-    const formData = new FormData();
-    formData.append("image", file);
-
-    // 2. Send it to your server
-    // Example:
-    // fetch('your-upload-endpoint', {
-    //   method: 'POST',
-    //   body: formData,
-    // })
-    // .then(response => response.json())
-    // .then(data => console.log('Success:', data))
-    // .catch(error => console.error('Error:', error));
-
-    console.log("File to upload:", file);
-  };
-
   const onSubmit = async (data: any) => {
     try {
       // TODO: remove the console log

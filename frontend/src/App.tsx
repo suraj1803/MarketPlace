@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import ItemCard from "./components/ItemCard";
 import Navbar from "./components/Navbar";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import useItemStore from "./store/useItemStore";
+import SyncLoader from "react-spinners/SyncLoader";
 
 export interface Item {
   _id: string;
@@ -17,22 +18,22 @@ export interface Item {
 }
 
 const App = () => {
-  //const [items, setItems] = useState<Item[]>([]);
-
   const { items, fetchItems, isLoading, error } = useItemStore();
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [items.length]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <SyncLoader color="#2563EB" loading={isLoading} size={30} />
+      </div>
+    );
   }
   if (error) {
     return <div>Error: {error}</div>;
   }
-
-  const notify = () => toast.success("Clicked");
 
   return (
     <>
@@ -43,10 +44,7 @@ const App = () => {
         <Navbar />
         <div className="p-5 flex justify-center">
           <div className="w-full max-w-7xl">
-            <div
-              onClick={notify}
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
-            >
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {items.map((item) => (
                 <ItemCard item={item} key={item._id} />
               ))}
