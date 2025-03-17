@@ -24,7 +24,7 @@ export default function MobileNav() {
 
       {/* Side Navigation */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 p-5 ${
+        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 p-8 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
