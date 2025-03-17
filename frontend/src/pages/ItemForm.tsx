@@ -182,16 +182,7 @@ const ItemForm = () => {
                   </select>
                 </div>
               </div>
-              {/* <div>
-              <label></label>
-              <ImageUploader
-                onUpload={handleUpload}
-                acceptedFileTypes="image/*"
-                maxSizeMB={5}
-              ></ImageUploader>
-            </div> */}
 
-              {/* TODO: Add image uploader & remove the below div */}
               <div>
                 <label
                   htmlFor="image"
