@@ -3,8 +3,8 @@ import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, Link, useNavigate } from "react-router";
-import axios from "axios";
 import useAuthStore from "../store/useAuthStore";
+import api from "../utils/api";
 
 // Toast type definitions
 type ToastType = "error" | "success";
@@ -119,7 +119,7 @@ const Signup: React.FC = () => {
 
   const handleSignUp = async (data: FieldValues): Promise<void> => {
     try {
-      const response = await axios.post("/api/auth/signup", data, {
+      const response = await api.post("/api/auth/signup", data, {
         headers: { "Content-Type": "application/json" },
       });
 

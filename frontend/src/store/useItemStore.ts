@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
+import api from "../utils/api";
 
 interface Item {
   _id: string;
@@ -34,7 +35,7 @@ const useItemStore = create<ItemStore>((set, get) => ({
   fetchItems: async () => {
     set({ isLoading: true });
     try {
-      const response = await axios.get("/api/items");
+      const response = await api.get("/api/items");
 
       // TODO: remove the console log
       //console.log("Items list from server: ", response.data.items);
@@ -53,7 +54,7 @@ const useItemStore = create<ItemStore>((set, get) => ({
 
   addItem: async (item: Item, token: string) => {
     try {
-      const response = await axios.post("/api/items/", item, {
+      const response = await api.post("/api/items/", item, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -76,7 +77,7 @@ const useItemStore = create<ItemStore>((set, get) => ({
       set({ currentItem: existingItem });
     } else {
       try {
-        const response = await axios.get(`/api/items/${id}`);
+        const response = await api.get(`/api/items/${id}`);
         if (!response.data.success) {
           throw new Error("Item not found");
         }
