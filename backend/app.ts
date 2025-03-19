@@ -8,10 +8,18 @@ import itemRouter from "./src/routes/itemRouter";
 import userRouter from "./src/routes/userRouter";
 import uploadRoute from "./src/routes/uploadRoute";
 import fs from "fs";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
+
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Allow frontend URL in development
+    credentials: true, // Allow cookies & authentication headers
+  }),
+);
 
 // Create uploads directory if it doesn't exist
 if (!fs.existsSync("uploads")) {
@@ -39,7 +47,7 @@ dbConnect()
   .then(() => {
     app.listen(process.env.PORT, () => {
       console.log(
-        `Server is running on port https://localhost:${process.env.PORT}`
+        `Server is running on port https://localhost:${process.env.PORT}`,
       );
     });
   })
