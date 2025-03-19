@@ -5,6 +5,8 @@ import ItemForm from "../pages/ItemForm";
 import Signup from "./Signup";
 import PrivateRouter from "./PrivateRouter";
 import ItemDetails from "../pages/ItemDetails";
+import UserProfile from "../pages/UserProfile";
+import MyProfile from "../pages/MyProfile";
 
 const router = createBrowserRouter([
   {
@@ -13,10 +15,12 @@ const router = createBrowserRouter([
       { path: "/", element: <App /> },
       { path: "/post", element: <ItemForm /> },
       { path: "/items/:id", element: <ItemDetails /> },
+      { path: "/users/me", element: <MyProfile /> },
     ],
   },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Signup /> },
+  { path: "/users/:id", element: <UserProfile /> },
 ]);
 
 export default router;

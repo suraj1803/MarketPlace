@@ -17,6 +17,7 @@ export const createItem = async (req: Request, res: Response) => {
     });
     await item.save();
     await User.findByIdAndUpdate(sellerId, { $inc: { itemCount: 1 } });
+    await User.findByIdAndUpdate(sellerId, { $push: { items: item._id } });
     res.status(200).json({ success: true, item });
   } catch (error) {
     res.status(500).json({ message: error });

@@ -1,10 +1,12 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Navbar from "../components/Navbar";
 import useItemStore from "../store/useItemStore";
 import { useEffect } from "react";
+import { FaLink } from "react-icons/fa";
 
 const ItemDetails = () => {
   const { currentItem, setCurrentItem } = useItemStore();
+  const navigate = useNavigate();
   const { id } = useParams();
   useEffect(() => {
     setCurrentItem(id);
@@ -27,14 +29,18 @@ const ItemDetails = () => {
 
               <p className="leading-relaxed mt-4">{currentItem?.description}</p>
 
-              <div className="flex">
-                <span className="title-font font-medium text-2xl text-gray-900 mt-8">
-                  ₹ {currentItem?.price}
-                </span>
-                <button className="flex ml-auto text-white mt-8 bg-blue-600 border-0 py-2 px-6 focus:outline-none hover:bg-blue-500 rounded">
-                  Contact With Seller
-                </button>
-              </div>
+              <p className="title-font font-medium text-3xl text-gray-900 mt-8">
+                ₹ {currentItem?.price}
+              </p>
+              <p
+                className="text-xl mt-8 flex items-center gap-1 font-medium text-gray-900 hover:cursor-pointer hover:underline"
+                onClick={() => {
+                  navigate(`/users/${currentItem?.sellerId._id}`);
+                }}
+              >
+                Seller: {currentItem?.sellerId.name}{" "}
+                <FaLink className="inline-block text-sm text-blue-800"></FaLink>
+              </p>
             </div>
           </div>
         </div>

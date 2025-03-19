@@ -5,7 +5,7 @@ import { FaShoppingBag } from "react-icons/fa";
 import { IoMdExit } from "react-icons/io";
 
 const Navbar = () => {
-  const { logout } = useAuthStore();
+  const { userId, logout } = useAuthStore();
   const navigate = useNavigate();
   const handleLogout = () => {
     logout();
@@ -31,6 +31,18 @@ const Navbar = () => {
           >
             <FaShoppingBag className="text-md" /> Sell Item
           </button>
+          <div
+            className="hover:cursor-pointer"
+            onClick={() => {
+              navigate(`/users/me`);
+            }}
+          >
+            <img
+              className="h-7 w-7 rounded-full object-cover "
+              src={"https://avatars.dicebear.com/api/avataaars/1.svg"}
+              alt="profile pic"
+            />
+          </div>
           <button
             className="flex items-center gap-1.5 bg-none font-semibold text-white hover:text-gray-300 rounded  hover:cursor-pointer"
             onClick={handleLogout}

@@ -3,9 +3,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import useItemStore from "../store/useItemStore";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const ItemForm = () => {
-  const { addItem } = useItemStore();
+  const { addItem, isLoading, setLoading } = useItemStore();
   const navigate = useNavigate();
   const categories = [
     { id: "electronics", name: "Electronics" },
@@ -50,6 +51,7 @@ const ItemForm = () => {
       const formData = new FormData();
       formData.append("image", file);
 
+      setLoading(true);
       const uploadResponse = await axios.post("/api/upload", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -75,6 +77,7 @@ const ItemForm = () => {
       delete itemData.image;
 
       addItem(itemData, token);
+      setLoading(false);
       alert("Item Listed Successfully.");
       navigate("/");
     } catch (error: any) {
@@ -84,6 +87,14 @@ const ItemForm = () => {
       alert(error.response?.data?.message || "Failed to list item");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <SyncLoader color="#2563EB" loading={isLoading} size={30} />
+      </div>
+    );
+  }
   return (
     <>
       <nav className="bg-blue-700 flex items-center sticky top-0 z-50 h-15">

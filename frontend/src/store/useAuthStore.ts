@@ -2,27 +2,27 @@ import { create } from "zustand";
 
 interface AuthState {
   isAuthenticated: boolean;
-  userId: string | null;
-  email: string | null;
-  token: string | null;
+  userId: string;
+  email: string;
+  token: string;
   login: (userId: string, email: string, token: string) => void;
   logout: () => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: localStorage.getItem("token") ? true : false,
-  userId: null,
-  email: null,
-  token: null,
+  userId: localStorage.getItem("userId") || "",
+  email: localStorage.getItem("email") || "",
+  token: localStorage.getItem("token") || "",
   login: (userId, email, token) => {
     localStorage.setItem("token", token);
     localStorage.setItem("userId", userId);
     localStorage.setItem("email", email);
     set({
       isAuthenticated: true,
-      userId,
-      email,
-      token,
+      userId: userId,
+      email: email,
+      token: token,
     });
   },
   logout: () => {
@@ -31,9 +31,9 @@ const useAuthStore = create<AuthState>((set) => ({
     localStorage.removeItem("email");
     set({
       isAuthenticated: false,
-      userId: null,
-      email: null,
-      token: null,
+      userId: "",
+      email: "",
+      token: "",
     });
   },
 }));

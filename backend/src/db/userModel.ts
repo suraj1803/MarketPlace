@@ -6,7 +6,9 @@ export interface UserDocument extends mongoose.Document {
   password: string;
   itemCount: number;
   bio?: string;
-  profilePicture?: string;
+  imgUrl?: string;
+  items: mongoose.ObjectId[];
+  createdAt: Date; // Add this field to the interface
 }
 
 const UserSchema = new mongoose.Schema<UserDocument>({
@@ -28,11 +30,20 @@ const UserSchema = new mongoose.Schema<UserDocument>({
     type: Number,
     default: 0,
   },
+  items: {
+    type: [mongoose.Schema.Types.ObjectId],
+    default: [],
+  },
   bio: {
     type: String,
   },
-  profilePicture: {
+  imgUrl: {
     type: String,
+  },
+  // Add the createdAt field
+  createdAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

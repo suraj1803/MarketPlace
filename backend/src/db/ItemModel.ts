@@ -1,6 +1,17 @@
 import mongoose, { Schema } from "mongoose";
 
-const ItemSchema = new mongoose.Schema({
+export interface ItemDocument extends mongoose.Document {
+  name: string;
+  imgUrl: string;
+  description: string;
+  price: number;
+  category: string;
+  condition: string;
+  sellerId: Schema.Types.ObjectId;
+  createdAt: Date;
+}
+
+const ItemSchema = new mongoose.Schema<ItemDocument>({
   name: {
     type: String,
     required: [true, "Please provide a name."],

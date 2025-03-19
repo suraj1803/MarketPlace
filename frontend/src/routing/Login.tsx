@@ -40,9 +40,9 @@ const Login = () => {
       // TODO: Remove this console.log
       console.log("Response from server : ", response.data);
 
-      const token = response.data.token;
-      const userId = response.data.userId;
-      const email = data.email;
+      const token = response.data.token.toString();
+      const userId = response.data.userId.toString();
+      const email = data.email.toString();
       login(userId, email, token);
       navigate("/");
     } catch (error) {

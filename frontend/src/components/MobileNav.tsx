@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 import { TiThMenu } from "react-icons/ti";
+import { FaPlus, FaShoppingBag } from "react-icons/fa";
+import { IoMdExit } from "react-icons/io";
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +26,7 @@ export default function MobileNav() {
 
       {/* Side Navigation */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 p-8 ${
+        className={`fixed top-0 right-0 h-full w-50 bg-blue-800 shadow-lg transform transition-transform duration-300 p-8 ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -40,19 +42,19 @@ export default function MobileNav() {
               navigate("/post");
               setIsOpen(false);
             }}
-            className="py-2 px-4 text-white font-semibold bg-blue-600 rounded shadow-md hover:bg-gray-200 transition-all hover:cursor-pointer"
+            className="flex items-center gap-1  font-semibold bg-none text-white hover:text-gray-300  transition-all hover:cursor-pointer"
           >
-            ➕ Sell Item
+            <FaShoppingBag className="text-md" /> Sell Item
           </button>
 
           <button
+            className="flex items-center gap-1.5 bg-none font-semibold text-white hover:text-gray-300 rounded  hover:cursor-pointer"
             onClick={() => {
               setIsOpen(false);
               handleLogout();
             }}
-            className="py-2 px-4 bg-red-600 text-white rounded shadow hover:bg-red-700"
           >
-            Logout
+            Logout <IoMdExit className="text-lg" />
           </button>
         </nav>
       </div>

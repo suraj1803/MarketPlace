@@ -4,8 +4,9 @@ import { Item } from "../App";
 
 interface ItemStore {
   items: Item[];
-  currentItem: any;
+  currentItem: Item | null;
   isLoading: boolean;
+  setLoading: (loading: boolean) => void;
   error: any;
   fetchItems: () => Promise<void>;
   setCurrentItem: (item: any) => void;
@@ -17,13 +18,17 @@ const useItemStore = create<ItemStore>((set, get) => ({
   currentItem: null,
   isLoading: false,
   error: null,
+  setLoading: (loading) => set({ isLoading: loading }),
 
   fetchItems: async () => {
     set({ isLoading: true });
     try {
       const response = await axios.get("/api/items");
       console.log("Items list from server: ", response.data.items);
-      if (response.data.items.length != get().items.length) {
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      if (response.data.items.length !== get().items.length) {
         set({ items: response.data.items, isLoading: false });
       }
       set({ isLoading: false });
@@ -34,7 +39,6 @@ const useItemStore = create<ItemStore>((set, get) => ({
 
   addItem: async (item: Item, token: string) => {
     try {
-      set({ isLoading: true, error: null });
       const response = await axios.post("/api/items/", item, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -42,11 +46,12 @@ const useItemStore = create<ItemStore>((set, get) => ({
         },
       });
       if (!response.data.success) {
+        set({ error: response.data.message });
         throw new Error(response.data.message);
       }
-      set({ items: [...get().items, item], isLoading: false });
+      set({ items: [...get().items, item] });
     } catch (error) {
-      set({ error: (error as Error).message, isLoading: false });
+      set({ error: (error as Error).message });
       throw error;
     }
   },

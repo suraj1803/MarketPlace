@@ -17,7 +17,7 @@ interface User {
 }
 
 const MyProfile = () => {
-  const { id } = useParams();
+  const id = localStorage.getItem("userId");
   const [user, setUser] = useState<User | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [activeTab, setActiveTab] = useState("listings");
@@ -110,6 +110,17 @@ const MyProfile = () => {
                 </span>
               </div>
             </div>
+            <div className="sm:ml-auto mt-4 sm:mt-0 flex gap-3">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition shadow-sm">
+                Edit Profile
+              </button>
+              <button
+                className="bg-blue-100 hover:bg-blue-200 text-blue-700 py-2 px-4 rounded-lg transition shadow-sm"
+                onClick={() => navigate("/post")}
+              >
+                Add Listing
+              </button>
+            </div>
           </div>
         </div>
 
@@ -122,7 +133,7 @@ const MyProfile = () => {
                 onClick={() => setActiveTab("listings")}
                 className={`w-full text-left py-3 px-4 font-medium ${activeTab === "listings" ? "bg-blue-600 text-white" : "bg-white text-gray-700 hover:bg-gray-50"}`}
               >
-                Listings
+                My Listings
               </button>
               <button
                 onClick={() => setActiveTab("details")}
@@ -157,7 +168,7 @@ const MyProfile = () => {
             {activeTab === "listings" ? (
               <div className="bg-white rounded-xl shadow-sm p-6">
                 <h2 className="text-2xl font-semibold text-gray-800 mb-5">
-                  User's Listings
+                  My Listings
                 </h2>
                 {items.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -168,6 +179,12 @@ const MyProfile = () => {
                 ) : (
                   <div className="text-center py-8">
                     <p className="text-gray-500">No listings yet.</p>
+                    <button
+                      className="mt-4 bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition"
+                      onClick={() => navigate("/post")}
+                    >
+                      Create Your First Listing
+                    </button>
                   </div>
                 )}
               </div>
@@ -190,6 +207,11 @@ const MyProfile = () => {
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">Bio</h3>
                     <p className="mt-1">{user.bio || "No bio provided yet."}</p>
+                  </div>
+                  <div className="pt-4">
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
+                      Edit Details
+                    </button>
                   </div>
                 </div>
               </div>
