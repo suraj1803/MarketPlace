@@ -14,23 +14,22 @@ dotenv.config();
 
 const app = express();
 
+// Create uploads directory if it doesn't exist
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
+
+// Create uploads directory if it doesn't exist
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads");
+}
+
 app.use(
   cors({
     origin: "http://localhost:5173", // Allow frontend URL in development
     credentials: true, // Allow cookies & authentication headers
   }),
 );
-
-// Create uploads directory if it doesn't exist
-if (!fs.existsSync("uploads")) {
-  fs.mkdirSync("uploads");
-}
-
-// Create uploads directory if it doesn't exist
-if (!fs.existsSync("uploads")) {
-  fs.mkdirSync("uploads");
-}
-
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
