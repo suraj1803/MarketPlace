@@ -3,14 +3,23 @@ import Navbar from "../components/Navbar";
 import useItemStore from "../store/useItemStore";
 import { useEffect } from "react";
 import { FaLink } from "react-icons/fa";
+import SyncLoader from "react-spinners/SyncLoader";
 
 const ItemDetails = () => {
-  const { currentItem, setCurrentItem } = useItemStore();
+  const { currentItem, setCurrentItem, setLoading, isLoading } = useItemStore();
   const navigate = useNavigate();
   const { id } = useParams();
   useEffect(() => {
     setCurrentItem(id);
-  }, []);
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <SyncLoader color="#2563EB" loading={isLoading} size={30} />
+      </div>
+    );
+  }
   return (
     <>
       <Navbar></Navbar>

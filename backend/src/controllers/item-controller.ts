@@ -18,7 +18,11 @@ export const createItem = async (req: Request, res: Response) => {
     await item.save();
     await User.findByIdAndUpdate(sellerId, { $inc: { itemCount: 1 } });
     await User.findByIdAndUpdate(sellerId, { $push: { items: item._id } });
-    res.status(200).json({ success: true, item });
+    const populatedItem = await Item.findById(item._id).populate(
+      "sellerId",
+      "name email",
+    );
+    res.status(200).json({ success: true, item: populatedItem });
   } catch (error) {
     res.status(500).json({ message: error });
   }
@@ -42,7 +46,6 @@ export const getItem = async (req: Request, res: Response) => {
     if (!item) {
       return res.status(404).json({ message: "Item not found" });
     }
-
     res.json({ success: true, item });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });

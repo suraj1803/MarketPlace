@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import { Item } from "../App";
 import ItemCard from "../components/ItemCard";
 import Navbar from "../components/Navbar";
+import useItemStore from "../store/useItemStore";
+import SyncLoader from "react-spinners/SyncLoader";
 
 interface User {
   name: string;
@@ -21,15 +23,18 @@ const MyProfile = () => {
   const [user, setUser] = useState<User | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [activeTab, setActiveTab] = useState("listings");
+  const { isLoading, setLoading } = useItemStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(`/api/users/${id}/items`);
         const user: User = response.data.user;
         setUser(user);
         setItems(response.data.items);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -37,12 +42,10 @@ const MyProfile = () => {
     fetchUser();
   }, [id]);
 
-  if (!user) {
+  if (isLoading) {
     return (
-      <div className="max-w-7xl mx-auto p-8 flex justify-center items-center h-64">
-        <div className="animate-pulse text-lg text-gray-500">
-          Loading user profile...
-        </div>
+      <div className="min-h-screen flex justify-center items-center">
+        <SyncLoader color="#2563EB" loading={isLoading} size={30} />
       </div>
     );
   }
@@ -57,13 +60,13 @@ const MyProfile = () => {
             <img
               className="h-24 w-24 rounded-full object-cover shadow-md ring-4 ring-blue-50"
               src={
-                user.imgUrl ||
+                user?.imgUrl ||
                 "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               }
-              alt={`${user.name}'s profile`}
+              alt={`${user?.name}'s profile`}
             />
             <div className="text-center sm:text-left">
-              <h1 className="text-3xl font-bold text-gray-800">{user.name}</h1>
+              <h1 className="text-3xl font-bold text-gray-800">{user?.name}</h1>
               <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mt-2 text-gray-500">
                 <span className="flex items-center gap-1">
                   <svg
@@ -82,8 +85,8 @@ const MyProfile = () => {
                   </svg>
                   <span className="text-sm">
                     Joined{" "}
-                    {user.createdAt
-                      ? new Date(user.createdAt).toLocaleDateString("en-US", {
+                    {user?.createdAt
+                      ? new Date(user?.createdAt).toLocaleDateString("en-US", {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
@@ -196,17 +199,19 @@ const MyProfile = () => {
                 <div className="space-y-6">
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">Email</h3>
-                    <p className="mt-1">{user.email}</p>
+                    <p className="mt-1">{user?.email}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">
                       Location
                     </h3>
-                    <p className="mt-1">{user.location || "Not specified"}</p>
+                    <p className="mt-1">{user?.location || "Not specified"}</p>
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">Bio</h3>
-                    <p className="mt-1">{user.bio || "No bio provided yet."}</p>
+                    <p className="mt-1">
+                      {user?.bio || "No bio provided yet."}
+                    </p>
                   </div>
                   <div className="pt-4">
                     <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">

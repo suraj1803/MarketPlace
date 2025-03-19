@@ -1,6 +1,17 @@
 import { create } from "zustand";
 import axios from "axios";
-import { Item } from "../App";
+
+interface Item {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  sellerId: any;
+  category: string;
+  condition: string;
+  imgUrl: string;
+  sellerName: string;
+}
 
 interface ItemStore {
   items: Item[];
@@ -24,7 +35,10 @@ const useItemStore = create<ItemStore>((set, get) => ({
     set({ isLoading: true });
     try {
       const response = await axios.get("/api/items");
-      console.log("Items list from server: ", response.data.items);
+
+      // TODO: remove the console log
+      //console.log("Items list from server: ", response.data.items);
+
       if (!response.data.success) {
         throw new Error(response.data.message);
       }
@@ -49,7 +63,7 @@ const useItemStore = create<ItemStore>((set, get) => ({
         set({ error: response.data.message });
         throw new Error(response.data.message);
       }
-      set({ items: [...get().items, item] });
+      set({ items: [...get().items, response.data.item] });
     } catch (error) {
       set({ error: (error as Error).message });
       throw error;
