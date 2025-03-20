@@ -5,6 +5,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useAuthStore from "../store/useAuthStore";
 import api from "../utils/api";
+import axios from "axios";
 
 const schema = z.object({
   email: z.string().email("Enter a valid email."),
@@ -28,10 +29,8 @@ const Login = () => {
 
   const handleLogin = async (data: FieldValues) => {
     try {
-      const response = await api.post(
-        "https://marketplace-production-b136.up.railway.app/api/auth/login",
-        data,
-      );
+      const response = await axios.post("api/auth/login", data);
+      console.log("response: ", response);
       if (!response.data.success) {
         setError("password", {
           type: "manual",

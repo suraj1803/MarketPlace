@@ -6,6 +6,7 @@ import useItemStore from "./store/useItemStore";
 import SyncLoader from "react-spinners/SyncLoader";
 import useAuthStore from "./store/useAuthStore";
 import api from "./utils/api";
+import axios from "axios";
 
 export interface Item {
   _id: string;
@@ -29,7 +30,7 @@ const App = () => {
     const fetchData = async () => {
       try {
         await fetchItems();
-        const res = await api.get(`/api/users/${userId}`);
+        const res = await axios.get(`/api/users/${userId}`);
         setUser(res.data.user);
       } catch (err) {
         alert(err);

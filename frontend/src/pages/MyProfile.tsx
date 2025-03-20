@@ -6,6 +6,7 @@ import Navbar from "../components/Navbar";
 import useItemStore from "../store/useItemStore";
 import SyncLoader from "react-spinners/SyncLoader";
 import api from "../utils/api";
+import axios from "axios";
 
 interface User {
   name: string;
@@ -30,7 +31,7 @@ const MyProfile = () => {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/api/users/${id}/items`);
+        const response = await axios.get(`/api/users/${id}/items`);
         const user: User = response.data.user;
         setUser(user);
         setItems(response.data.items);

@@ -4,6 +4,7 @@ import { Item } from "../App";
 import ItemCard from "../components/ItemCard";
 import Navbar from "../components/Navbar";
 import api from "../utils/api";
+import axios from "axios";
 
 interface User {
   name: string;
@@ -16,7 +17,7 @@ interface User {
   createdAt?: Date;
 }
 
-const MyProfile = () => {
+const UserProfile = () => {
   const { id } = useParams();
   const [user, setUser] = useState<User | null>(null);
   const [items, setItems] = useState<Item[]>([]);
@@ -26,7 +27,7 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await api.get(`/api/users/${id}/items`);
+        const response = await axios.get(`/api/users/${id}/items`);
         const user: User = response.data.user;
         setUser(user);
         setItems(response.data.items);
@@ -201,4 +202,4 @@ const MyProfile = () => {
   );
 };
 
-export default MyProfile;
+export default UserProfile;

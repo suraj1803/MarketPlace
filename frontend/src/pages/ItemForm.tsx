@@ -4,6 +4,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import useItemStore from "../store/useItemStore";
 import SyncLoader from "react-spinners/SyncLoader";
 import api from "../utils/api";
+import axios from "axios";
 
 const ItemForm = () => {
   const { addItem, isLoading, setLoading } = useItemStore();
@@ -52,7 +53,7 @@ const ItemForm = () => {
       formData.append("image", file);
 
       setLoading(true);
-      const uploadResponse = await api.post("/api/upload", formData, {
+      const uploadResponse = await axios.post("/api/upload", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

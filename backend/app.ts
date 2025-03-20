@@ -24,12 +24,16 @@ if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
 }
 
-app.use(
-  cors({
-    origin: "http://localhost:5173", // Allow frontend URL in development
-    credentials: true, // Allow cookies & authentication headers
-  }),
-);
+//app.use(
+//  cors({
+//    origin: [
+//      "http://localhost:5173", // Development
+//      //"https://marketplace.bsuraj.tech", // Production
+//    ],
+//    credentials: true, // Allow cookies & authentication headers
+//  }),
+//);
+
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
