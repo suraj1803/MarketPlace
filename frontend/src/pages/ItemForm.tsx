@@ -4,29 +4,12 @@ import { FaArrowLeft } from "react-icons/fa";
 import useItemStore from "../store/useItemStore";
 import SyncLoader from "react-spinners/SyncLoader";
 import api from "../utils/api";
+import { categories, conditions } from "../utils/ItemConfig";
 import axios from "axios";
 
 const ItemForm = () => {
   const { addItem, isLoading, setLoading } = useItemStore();
   const navigate = useNavigate();
-  const categories = [
-    { id: "electronics", name: "Electronics" },
-    { id: "clothing", name: "Clothing & Accessories" },
-    { id: "home", name: "Home & Garden" },
-    { id: "toys", name: "Toys & Games" },
-    { id: "sports", name: "Sports & Outdoors" },
-    { id: "books", name: "Books & Media" },
-    { id: "other", name: "Other" },
-  ];
-
-  const conditions = [
-    { id: "new", name: "New" },
-    { id: "like_new", name: "Like New" },
-    { id: "good", name: "Good" },
-    { id: "fair", name: "Fair" },
-    { id: "poor", name: "Poor" },
-  ];
-
   const {
     register,
     handleSubmit,
@@ -80,6 +63,7 @@ const ItemForm = () => {
       addItem(itemData, token);
       setLoading(false);
       alert("Item Listed Successfully.");
+      console.log("ItemData: ", itemData);
       navigate("/");
     } catch (error: any) {
       // TODO: remove the console log
@@ -167,7 +151,7 @@ const ItemForm = () => {
                   >
                     <option value="">Select a category</option>
                     {categories.map((category) => (
-                      <option key={category.id} value={category.name}>
+                      <option key={category.id} value={category.id}>
                         {category.name}
                       </option>
                     ))}

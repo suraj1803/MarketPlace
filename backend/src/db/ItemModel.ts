@@ -1,5 +1,15 @@
 import mongoose, { Schema } from "mongoose";
 
+const allowedCategories = [
+  "electronics",
+  "clothing",
+  "home",
+  "toys",
+  "sports",
+  "books",
+  "other",
+];
+
 export interface ItemDocument extends mongoose.Document {
   name: string;
   imgUrl: string;
@@ -34,8 +44,12 @@ const ItemSchema = new mongoose.Schema<ItemDocument>({
   },
   category: {
     type: String,
+    enum: {
+      values: allowedCategories,
+      message:
+        "Invalid category. Allowed categories are: electronics, furniture, books, clothing, sports, accessories.",
+    },
     required: [true, "Please provide a category."],
-    unique: false,
   },
   condition: {
     type: String,

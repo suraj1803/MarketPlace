@@ -75,3 +75,17 @@ export const deleteItem = async (req: Request, res: Response) => {
     res.status(500).json({ message: (error as Error).message });
   }
 };
+
+export const getItemsByCategory = async (req: Request, res: Response) => {
+  try {
+    const { category } = req.params;
+    const items = await Item.find({
+      category: { $regex: new RegExp(category, "i") },
+    }).populate("sellerId", "name email");
+
+    res.json({ success: true, items });
+  } catch (error) {
+    console.error("Error fetching items by category:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
+};

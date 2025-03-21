@@ -16,7 +16,10 @@ const Navbar = () => {
       <div className="container mx-auto max-w-7xl flex justify-between items-center p-2 h-15">
         <a
           className="flex items-center text-white hover:cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={() => {
+            navigate("/");
+            window.location.reload();
+          }}
         >
           <FaShoppingBag className="text-xl "></FaShoppingBag>
           <span className="ml-3 text-xl font-semibold">MarketPlace</span>

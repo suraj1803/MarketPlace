@@ -7,6 +7,7 @@ import SyncLoader from "react-spinners/SyncLoader";
 import useAuthStore from "./store/useAuthStore";
 import api from "./utils/api";
 import axios from "axios";
+import FilterDropdown from "./components/FilterButton";
 
 export interface Item {
   _id: string;
@@ -21,7 +22,14 @@ export interface Item {
 }
 
 const App = () => {
-  const { items, fetchItems, isLoading, error } = useItemStore();
+  const {
+    items,
+    fetchItems,
+    fetchItemsByCategory,
+    isLoading,
+    error,
+    selectedCategoryId,
+  } = useItemStore();
   const { userId } = useAuthStore();
 
   const [user, setUser] = useState(null);
@@ -40,6 +48,12 @@ const App = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    try {
+      if (selectedCategoryId) fetchItemsByCategory();
+    } catch (error) {}
+  }, [selectedCategoryId]);
 
   if (isLoading) {
     return (
@@ -61,11 +75,18 @@ const App = () => {
         <Navbar />
         <div className="p-5 flex justify-center">
           <div className="w-full max-w-7xl">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {items.map((item) => {
-                return <ItemCard key={item._id + 1} item={item} />;
-              })}
+            <div className="mb-5">
+              <FilterDropdown />
             </div>
+            {items.length === 0 ? (
+              <div className="text-center text-2xl">No items found</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {items.map((item) => {
+                  return <ItemCard key={item._id + 1} item={item} />;
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
