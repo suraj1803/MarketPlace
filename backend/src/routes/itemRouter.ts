@@ -5,12 +5,13 @@ import {
   deleteItem,
   getAllItems,
   getItem,
+  getItems,
   getItemsByCategory,
 } from "../controllers/item-controller";
 const itemRouter = express.Router();
 
 itemRouter.post("/", isAuthenticated, createItem);
-itemRouter.get("/", getAllItems);
+itemRouter.get("/", getItems);
 itemRouter.get("/:id", getItem);
 itemRouter.delete("/:id", isAuthenticated, deleteItem);
 itemRouter.get("/category/:category", getItemsByCategory);

@@ -47,13 +47,13 @@ const App = () => {
     };
 
     fetchData();
-  }, []);
+  }, [items, selectedCategoryId]);
 
-  useEffect(() => {
-    try {
-      if (selectedCategoryId) fetchItemsByCategory();
-    } catch (error) {}
-  }, [selectedCategoryId]);
+  //useEffect(() => {
+  //  try {
+  //    if (selectedCategoryId) fetchItemsByCategory();
+  //  } catch (error) {}
+  //}, [selectedCategoryId]);
 
   if (isLoading) {
     return (

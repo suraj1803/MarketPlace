@@ -2,19 +2,14 @@ import React, { useState } from "react";
 import { categories } from "../utils/ItemConfig.ts";
 import useItemStore from "../store/useItemStore.ts";
 
-interface CategoryOption {
-  id: string;
-  name: string;
-  selected: boolean;
-}
-
 const FilterDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState<
-    CategoryOption[]
-  >(categories.map((category) => ({ ...category, selected: false })));
-
-  const { selectedCategoryId, setSelectedCategoryId } = useItemStore();
+  const {
+    selectedCategoryId,
+    setSelectedCategoryId,
+    selectedCategories,
+    setSelectedCategories,
+  } = useItemStore();
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -22,10 +17,10 @@ const FilterDropdown: React.FC = () => {
 
   const selectCategory = (id: string) => {
     setSelectedCategoryId(id);
+
+    setSelectedCategories();
   };
 
-  // Get the display name for the button
-  const selectedCategory = selectedCategories.find((cat) => cat.selected);
   const buttonText = selectedCategoryId
     ? categories.find((category) => category.id === selectedCategoryId)?.name
     : "Category";
@@ -66,7 +61,7 @@ const FilterDropdown: React.FC = () => {
                   className="flex items-center space-x-2 cursor-pointer"
                 >
                   <input
-                    type="radio"
+                    type="checkbox"
                     checked={category.selected}
                     onChange={() => selectCategory(category.id)}
                     name="category"

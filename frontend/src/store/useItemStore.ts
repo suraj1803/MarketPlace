@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import axios from "axios";
-import api from "../utils/api";
+import { categories } from "../utils/ItemConfig";
 
 interface Item {
   _id: string;
@@ -14,14 +14,22 @@ interface Item {
   sellerName: string;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  selected: boolean;
+}
+
 interface ItemStore {
   items: Item[];
   currentItem: Item | null;
   isLoading: boolean;
   selectedCategoryId: string;
-  setSelectedCategoryId: (id: string) => void;
-  setLoading: (loading: boolean) => void;
+  selectedCategories: Category[];
   error: any;
+  setSelectedCategoryId: (id: string) => void;
+  setSelectedCategories: () => void;
+  setLoading: (loading: boolean) => void;
   fetchItems: () => Promise<void>;
   fetchItemsByCategory: () => Promise<void>;
   setCurrentItem: (item: any) => void;
@@ -34,6 +42,19 @@ const useItemStore = create<ItemStore>((set, get) => ({
   isLoading: false,
   error: null,
   selectedCategoryId: "",
+  selectedCategories: categories.map((category) => ({
+    ...category,
+    selected: false,
+  })),
+
+  setSelectedCategories: () => {
+    set({
+      selectedCategories: categories.map((category) => ({
+        ...category,
+        selected: category.id === get().selectedCategoryId,
+      })),
+    });
+  },
   setLoading: (loading) => set({ isLoading: loading }),
 
   setSelectedCategoryId: (id) => {
@@ -58,10 +79,13 @@ const useItemStore = create<ItemStore>((set, get) => ({
   fetchItems: async () => {
     set({ isLoading: true });
     try {
-      const response = await axios.get("/api/items");
+      const params: Record<string, string> = {};
+      if (get().selectedCategoryId) {
+        params.category = get().selectedCategoryId;
+      }
+      const response = await axios.get("/api/items", { params });
 
-      // TODO: remove the console log
-      //console.log("Items list from server: ", response.data.items);
+      // TODO: remove the console log console.log("Items list from server: ", response.data.items);
 
       if (!response.data.success) {
         throw new Error(response.data.message);

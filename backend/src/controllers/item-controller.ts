@@ -37,6 +37,20 @@ export const getAllItems = async (req: Request, res: Response) => {
   }
 };
 
+export const getItems = async (req: Request, res: Response) => {
+  try {
+    const { category } = req.query;
+    let filters: any = {};
+    if (category) {
+      filters.category = category;
+    }
+    const items = await Item.find(filters).populate("sellerId", "name email");
+    res.json({ success: true, items });
+  } catch (error) {
+    res.status(404).json({ message: error });
+  }
+};
+
 export const getItem = async (req: Request, res: Response) => {
   try {
     const item = await Item.findById(req.params.id).populate(

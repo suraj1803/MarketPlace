@@ -65,7 +65,6 @@ const ItemForm = () => {
       alert("Item Listed Successfully.");
       console.log("ItemData: ", itemData);
       navigate("/");
-      window.location.reload();
     } catch (error: any) {
       // TODO: remove the console log
       console.error("Error listing item:", error);
