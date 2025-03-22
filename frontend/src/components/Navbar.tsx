@@ -18,7 +18,6 @@ const Navbar = () => {
           className="flex items-center text-white hover:cursor-pointer"
           onClick={() => {
             navigate("/");
-            window.location.reload();
           }}
         >
           <FaShoppingBag className="text-xl "></FaShoppingBag>

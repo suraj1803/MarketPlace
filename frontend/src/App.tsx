@@ -32,7 +32,7 @@ const App = () => {
   } = useItemStore();
   const { userId } = useAuthStore();
 
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useAuthStore();
 
   useEffect(() => {
     const fetchData = async () => {

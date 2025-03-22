@@ -136,11 +136,10 @@ const Signup: React.FC = () => {
       console.log("Response from server : ", response.data);
 
       const token = response.data.token;
-      const userId = response.data.userId;
-      const email = data.email;
+      const user = response.data.user;
 
       localStorage.setItem("token", token);
-      login(userId, email, token);
+      login(user, token);
 
       showToast("Account created successfully!", "success");
       setTimeout(() => navigate("/"), 1000);

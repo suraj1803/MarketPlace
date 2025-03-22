@@ -18,7 +18,7 @@ type LoginFormData = z.infer<typeof schema>;
 
 const Login = () => {
   const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
+  const { login } = useAuthStore();
 
   const {
     register,
@@ -30,7 +30,6 @@ const Login = () => {
   const handleLogin = async (data: FieldValues) => {
     try {
       const response = await axios.post("api/auth/login", data);
-      console.log("response: ", response);
       if (!response.data.success) {
         setError("password", {
           type: "manual",
@@ -43,9 +42,8 @@ const Login = () => {
       console.log("Response from server : ", response.data);
 
       const token = response.data.token.toString();
-      const userId = response.data.userId.toString();
-      const email = data.email.toString();
-      login(userId, email, token);
+      const user = response.data.user;
+      login(user, token);
       navigate("/");
     } catch (error) {
       console.error("An error occurred:", error);

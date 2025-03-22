@@ -36,6 +36,8 @@ const UserSchema = new mongoose.Schema<UserDocument>({
   },
   bio: {
     type: String,
+    default: "",
+    required: false,
   },
   imgUrl: {
     type: String,

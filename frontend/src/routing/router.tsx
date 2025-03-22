@@ -7,6 +7,7 @@ import PrivateRouter from "./PrivateRouter";
 import ItemDetails from "../pages/ItemDetails";
 import UserProfile from "../pages/UserProfile";
 import MyProfile from "../pages/MyProfile";
+import ProfileUpdate from "../pages/ProfileUpdate";
 
 const router = createBrowserRouter([
   {
@@ -16,6 +17,7 @@ const router = createBrowserRouter([
       { path: "/post", element: <ItemForm /> },
       { path: "/items/:id", element: <ItemDetails /> },
       { path: "/users/me", element: <MyProfile /> },
+      { path: "/users/me/update", element: <ProfileUpdate /> },
     ],
   },
   { path: "/login", element: <Login /> },

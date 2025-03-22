@@ -12,14 +12,12 @@ interface UserInterface {
 
 export interface TokenPayLoad {
   _id: String;
-  name: String;
   email: String;
 }
 
 export async function generateToken(user: UserInterface, secret_key: string) {
   const payload: TokenPayLoad = {
     _id: user._id,
-    name: user.name,
     email: user.email,
   };
 
@@ -39,12 +37,13 @@ export async function createUser(data: any) {
     const user = new User({ ...data, password: hashedPassword });
     await user.save();
     const token = await generateToken(user as UserInterface, secret_key);
+    const { password: _, ...modified_user } = user.toObject();
+    modified_user._id = modified_user._id?.toString();
     return {
       success: true,
       message: "User Created Successfully",
       token,
-      userId: user._id ? user._id.toString() : "",
-      email: user.email,
+      user: modified_user,
     };
   } catch (error) {
     throw error;
@@ -52,7 +51,7 @@ export async function createUser(data: any) {
 }
 
 export async function authenticateUser(email: string, password: string) {
-  const user = await User.findOne({ email });
+  let user = await User.findOne({ email });
   if (!user) {
     return { success: false, message: "Invalid Credentials." };
   }
@@ -63,11 +62,13 @@ export async function authenticateUser(email: string, password: string) {
   }
 
   const token = await generateToken(user as UserInterface, secret_key);
+
+  const { password: _, ...modified_user } = user.toObject();
+  modified_user._id = modified_user._id?.toString();
+
   return {
     success: true,
     token,
-    email: user.email,
-    name: user.name,
-    userId: user._id ? user._id.toString() : "",
+    user: modified_user,
   };
 }

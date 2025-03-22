@@ -2,11 +2,17 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv, { configDotenv } from "dotenv";
 import { TokenPayLoad } from "../services/auth-services";
+import User from "../db/userModel";
 
 configDotenv();
 
-export function isAuthenticated(
-  req: Request,
+export interface MyRequest extends Request {
+  user?: any;
+  userId?: string;
+}
+
+export async function isAuthenticated(
+  req: MyRequest,
   res: Response,
   next: NextFunction,
 ) {
@@ -25,7 +31,9 @@ export function isAuthenticated(
       process.env.JWT_SECRET as string,
     ) as TokenPayLoad;
 
-    (req as any).userId = decoded._id;
+    const user = await User.findById(decoded._id).select("-password");
+    req.user = user;
+    req.userId = decoded._id.toString();
     next();
   } catch (error) {
     res.status(401).json({ message: "Access is Denied" });

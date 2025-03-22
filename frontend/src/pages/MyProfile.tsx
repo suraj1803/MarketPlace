@@ -115,7 +115,10 @@ const MyProfile = () => {
               </div>
             </div>
             <div className="sm:ml-auto mt-4 sm:mt-0 flex gap-3">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition shadow-sm">
+              <button
+                className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition shadow-sm"
+                onClick={() => navigate("/users/me/update")}
+              >
                 Edit Profile
               </button>
               <button
@@ -215,7 +218,10 @@ const MyProfile = () => {
                     </p>
                   </div>
                   <div className="pt-4">
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition">
+                    <button
+                      className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition"
+                      onClick={() => navigate("/users/me/update")}
+                    >
                       Edit Details
                     </button>
                   </div>

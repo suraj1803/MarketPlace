@@ -1,9 +1,5 @@
 import express, { Request, Response } from "express";
-import {
-  getUser,
-  getUserItems,
-  updateUser,
-} from "../controllers/user-controller";
+import { getUser, getUserItems } from "../controllers/user-controller";
 import { isAuthenticated } from "../middlewares/authMiddleware";
 
 const userRouter = express.Router();
