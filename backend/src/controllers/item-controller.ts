@@ -39,11 +39,21 @@ export const getAllItems = async (req: Request, res: Response) => {
 
 export const getItems = async (req: Request, res: Response) => {
   try {
-    const { category } = req.query;
+    const { category, search } = req.query;
     let filters: any = {};
+
     if (category) {
       filters.category = category;
     }
+
+    if (search) {
+      filters.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
+    }
+
     const items = await Item.find(filters).populate("sellerId", "name email");
     res.json({ success: true, items });
   } catch (error) {

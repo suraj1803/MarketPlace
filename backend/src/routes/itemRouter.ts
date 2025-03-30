@@ -3,11 +3,11 @@ import { isAuthenticated } from "../middlewares/authMiddleware";
 import {
   createItem,
   deleteItem,
-  getAllItems,
   getItem,
   getItems,
   getItemsByCategory,
 } from "../controllers/item-controller";
+import Item from "../db/ItemModel";
 const itemRouter = express.Router();
 
 itemRouter.post("/", isAuthenticated, createItem);

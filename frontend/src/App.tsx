@@ -29,6 +29,7 @@ const App = () => {
     isLoading,
     error,
     selectedCategoryId,
+    selectedQuery,
   } = useItemStore();
   const { userId } = useAuthStore();
 
@@ -47,7 +48,7 @@ const App = () => {
     };
 
     fetchData();
-  }, [items, selectedCategoryId]);
+  }, [items, selectedCategoryId, selectedQuery]);
 
   //useEffect(() => {
   //  try {

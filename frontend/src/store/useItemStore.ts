@@ -26,6 +26,9 @@ interface ItemStore {
   isLoading: boolean;
   selectedCategoryId: string;
   selectedCategories: Category[];
+  selectedQuery: string;
+  reset: () => void;
+  setSelectedQuery: (query: string) => void;
   error: any;
   setSelectedCategoryId: (id: string) => void;
   setSelectedCategories: () => void;
@@ -41,6 +44,13 @@ const useItemStore = create<ItemStore>((set, get) => ({
   currentItem: null,
   isLoading: false,
   error: null,
+  selectedQuery: "",
+  setSelectedQuery: (query: string) => {
+    set({ selectedQuery: query });
+  },
+  reset: () => {
+    set({ items: [], selectedCategoryId: "", selectedQuery: "" });
+  },
   selectedCategoryId: "",
   selectedCategories: categories.map((category) => ({
     ...category,
@@ -83,9 +93,13 @@ const useItemStore = create<ItemStore>((set, get) => ({
       if (get().selectedCategoryId) {
         params.category = get().selectedCategoryId;
       }
+      if (get().selectedQuery) {
+        params.search = get().selectedQuery;
+      }
+      console.log("Params: ", params);
       const response = await axios.get("/api/items", { params });
 
-      // TODO: remove the console log console.log("Items list from server: ", response.data.items);
+      // TODO: remove the console log
 
       if (!response.data.success) {
         throw new Error(response.data.message);

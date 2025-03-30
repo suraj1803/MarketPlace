@@ -67,5 +67,7 @@ const ItemSchema = new mongoose.Schema<ItemDocument>({
   },
 });
 
+ItemSchema.index({ name: "text", description: "text", category: "text" });
+
 const Item = mongoose.model("Item", ItemSchema);
 export default Item;
