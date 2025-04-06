@@ -37,6 +37,7 @@ interface ItemStore {
   fetchItemsByCategory: () => Promise<void>;
   setCurrentItem: (item: any) => void;
   addItem: (item: Item, token: string) => void;
+  deleteItem: (id: string, token: string) => Promise<void>;
 }
 
 const useItemStore = create<ItemStore>((set, get) => ({
@@ -146,6 +147,25 @@ const useItemStore = create<ItemStore>((set, get) => ({
       } catch (error) {
         set({ error: (error as Error).message });
       }
+    }
+  },
+
+  deleteItem: async (id: string, token: string): Promise<void> => {
+    try {
+      set({ isLoading: true });
+      const response = await axios.delete(`/api/items/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!response.data.success) {
+        throw new Error(response.data.message);
+      }
+      set({
+        items: get().items.filter((item) => item._id !== id),
+        isLoading: false,
+      });
+    } catch (error) {
+      set({ error: (error as Error).message });
+      set({ isLoading: true });
     }
   },
 }));

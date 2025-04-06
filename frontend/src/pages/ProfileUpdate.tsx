@@ -5,12 +5,14 @@ import { useForm } from "react-hook-form";
 import Navbar from "../components/Navbar";
 import axios from "axios";
 import useItemStore from "../store/useItemStore";
-import SyncLoader from "react-spinners/SyncLoader";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 const ProfileUpdate = () => {
   const { user, setUser, token } = useAuthStore();
   const { isLoading, setLoading } = useItemStore();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(user?.imgUrl || null);
 
   const {
     register,
@@ -26,26 +28,69 @@ const ProfileUpdate = () => {
     },
   });
 
-  const onSubmit = async (data: UserProfile) => {
+  // Handle image selection
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreview(URL.createObjectURL(file)); // Show preview
+    }
+  };
+
+  // Upload image to Cloudinary
+  const uploadImage = async (file: File) => {
     try {
-      console.log("Before: ", data);
-      setLoading(true);
-      const response = await axios.put(`/api/users/${user?._id}`, data, {
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const response = await axios.post("/api/upload", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       });
-      if (!response.data.success) {
-        throw new Error();
+
+      if (response.data.success) {
+        return response.data.data.url; // Return Cloudinary image URL
       }
-      console.log("After: ", data);
-      setUser(data);
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      toast.error("Failed to upload image");
+    }
+    return null;
+  };
+
+  const navigate = useNavigate();
+  const onSubmit = async (data: UserProfile) => {
+    try {
+      setLoading(true);
+      let imageUrl = user?.imgUrl; // Keep existing image if no new one is uploaded
+
+      if (selectedFile) {
+        imageUrl = await uploadImage(selectedFile);
+      }
+
+      const response = await axios.put(
+        `/api/users/${user?._id}`,
+        { ...data, imgUrl: imageUrl },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+
+      if (!response.data.success) throw new Error();
+
+      setUser(response.data.user);
       setLoading(false);
       toast.success("Profile updated successfully!");
+      navigate("/");
     } catch (err) {
       handleCancel();
       setLoading(false);
+      toast.error("Profile update failed");
     }
   };
 
@@ -56,36 +101,62 @@ const ProfileUpdate = () => {
       bio: user?.bio,
       email: user?.email,
     });
+    setPreview(user?.imgUrl || null);
+    setSelectedFile(null);
   };
 
   useEffect(() => {
-    if (user) {
-      reset({
-        _id: user._id,
-        name: user.name,
-        bio: user.bio,
-        email: user.email,
-      });
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`/api/users/${user?._id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(response.data.user);
+      } catch (error) {
+        console.error("Failed to fetch user:", error);
+      }
+    };
+
+    if (!user) {
+      fetchUser();
     }
-  }, [user, reset]); // Reset form values when `user` changes
+  }, [user, setUser, token]);
 
   return (
     <>
       <div>
-        <Toaster></Toaster>
+        <Toaster />
       </div>
       <Navbar />
       <div className="bg-gray-50 flex h-screen items-center justify-center">
         <div className="w-full max-w-sm sm:max-w-md sm:rounded-lg p-10 sm:shadow-sm">
           <div className="flex items-center mb-6">
-            <div className="bg-blue-100 p-3 rounded-full mr-4">
-              <User className="h-6 w-6 text-blue-500" />
-            </div>
             <h2 className="text-2xl font-bold text-gray-800">Edit Profile</h2>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-4">
+              {/* Image Upload */}
+              <div className="flex flex-col items-center">
+                {preview ? (
+                  <img
+                    src={user?.imgUrl || preview}
+                    alt="Profile"
+                    className="w-24 h-24 object-cover rounded-full border-2 border-gray-300 mb-2"
+                  />
+                ) : (
+                  <div className="w-24 h-24 bg-gray-200 rounded-full flex items-center justify-center">
+                    <User className="h-10 w-10 text-gray-500" />
+                  </div>
+                )}
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="mt-2 text-sm text-gray-600"
+                />
+              </div>
+
               {/* Name field */}
               <div>
                 <label

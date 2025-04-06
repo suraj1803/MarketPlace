@@ -94,7 +94,7 @@ export const deleteItem = async (req: Request, res: Response) => {
 
     await User.findByIdAndUpdate(user._id, { $inc: { itemCount: -1 } });
 
-    res.json({ success: true, data: item });
+    res.json({ success: true, item });
   } catch (error) {
     res.status(500).json({ message: (error as Error).message });
   }

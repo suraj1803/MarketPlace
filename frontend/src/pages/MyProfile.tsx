@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Item } from "../App";
-import ItemCard from "../components/ItemCard";
 import Navbar from "../components/Navbar";
 import useItemStore from "../store/useItemStore";
 import SyncLoader from "react-spinners/SyncLoader";
-import api from "../utils/api";
 import axios from "axios";
+import ProfileItemCard from "../components/ProfileItemCard";
 
 interface User {
   name: string;
@@ -26,6 +25,10 @@ const MyProfile = () => {
   const [activeTab, setActiveTab] = useState("listings");
   const { isLoading, setLoading } = useItemStore();
   const navigate = useNavigate();
+
+  const handleItemDelete = (id: string) => {
+    setItems((prevItems) => prevItems.filter((item) => item._id !== id));
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -180,7 +183,11 @@ const MyProfile = () => {
                 {items.length > 0 ? (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {items.map((item) => (
-                      <ItemCard key={item._id} item={item} />
+                      <ProfileItemCard
+                        key={item._id}
+                        item={item}
+                        onDelete={handleItemDelete}
+                      />
                     ))}
                   </div>
                 ) : (

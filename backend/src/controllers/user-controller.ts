@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import User from "../db/userModel";
 import Item from "../db/ItemModel";
 import { MyRequest } from "../middlewares/authMiddleware";
+import cloudinary from "../utils/cloudnary";
 
 export const getUser = async (req: Request, res: Response) => {
   try {
@@ -30,10 +31,10 @@ export const getUserItems = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: MyRequest, res: Response) => {
   try {
-    const { name, bio } = req.body;
+    const { name, bio, imgUrl } = req.body;
     const updatedUser = await User.findByIdAndUpdate(
       req.userId,
-      { name, bio },
+      { name, bio, imgUrl },
       { new: true, select: "-password" },
     );
     if (!updatedUser) {

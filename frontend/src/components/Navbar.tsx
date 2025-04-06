@@ -7,7 +7,7 @@ import { useState } from "react";
 import useItemStore from "../store/useItemStore";
 
 const Navbar = () => {
-  const { userId, logout } = useAuthStore();
+  const { userId, logout, user } = useAuthStore();
   const { setSelectedQuery, reset } = useItemStore();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -64,9 +64,7 @@ const Navbar = () => {
           >
             <img
               className="h-7 w-7 rounded-full object-cover"
-              src={
-                "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              }
+              src={user?.imgUrl}
               alt="profile pic"
             />
           </div>
