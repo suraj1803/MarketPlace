@@ -5,6 +5,8 @@ const allowedCategories = [
   "clothing",
   "home",
   "toys",
+  "vehicles",
+  "furnitures",
   "sports",
   "books",
   "other",

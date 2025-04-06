@@ -3,6 +3,8 @@ export const categories = [
   { id: "clothing", name: "Clothing & Accessories" },
   { id: "home", name: "Home & Garden" },
   { id: "toys", name: "Toys & Games" },
+  { id: "vehicles", name: "Vehicles" },
+  { id: "furnitures", name: "Furnitures" },
   { id: "sports", name: "Sports & Outdoors" },
   { id: "books", name: "Books & Media" },
   { id: "other", name: "Other" },
